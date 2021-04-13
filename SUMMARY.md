@@ -4,7 +4,3 @@
 
 ## ElasticStak
 
----
-
-* [Untitled](untitled.md)
-
