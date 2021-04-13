@@ -4,6 +4,5 @@
 
 ## Elastic Stack
 
-* [1.ElasticStack Install](elastic-stack/1.elasticstack-install/README.md)
-  * [install Elasticsearch](elastic-stack/1.elasticstack-install/first-step.md)
+* [1.ElasticStack Install](elastic-stack/1.elasticstack-install.md)
 
