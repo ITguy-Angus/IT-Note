@@ -1,4 +1,0 @@
-# install Elasticsearch
-
-test content
-
