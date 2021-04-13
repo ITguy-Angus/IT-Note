@@ -2,5 +2,5 @@
 
 * [Angus IT note](README.md)
 
-## ElasticStak
+## Elastic Stack
 
