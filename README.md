@@ -1,8 +1,2 @@
----
-description: '1'
----
-
-# Initial page
-
-123
+# Angus IT note
 
