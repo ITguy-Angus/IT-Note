@@ -4,5 +4,5 @@
 
 ## Elastic Stack
 
-* [ElasticStack 介紹與安裝](elastic-stack/1.elasticstack-install.md)
+* [Elastic Stack 介紹與安裝](elastic-stack/1.elasticstack-install.md)
 
