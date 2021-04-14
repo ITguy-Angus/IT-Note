@@ -4,6 +4,5 @@
 
 ## Elastic Stack
 
-* [1.ElasticStack Install](elastic-stack/1.elasticstack-install/README.md)
-  * [test](elastic-stack/1.elasticstack-install/install-elasticsearch.md)
+* [ElasticStack 介紹與安裝](elastic-stack/1.elasticstack-install.md)
 
