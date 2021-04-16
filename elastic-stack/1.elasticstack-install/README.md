@@ -1,0 +1,291 @@
+---
+description: ElasticStack 介紹與安裝
+---
+
+# 1.Elastic Stack 介紹與安裝
+
+ELK Stack 簡介
+
+     ELK是由Elasitc 公司開發並再2008年掛牌上市，ELK套件組成最初是由ElasticSearch、Logstash、Kibana 三個套件組成，後來又加入了Beat套件並改名為ELK Stack是一種數據處裡的框架，最先發名的組件為ElasticSearch是一個在2004為了收索食譜而發明收尋引擎，單當時他還叫做Compass就是了但在2010年就基於APACH Lucene 成為了開源軟體，後因ElasticSearch收到廣大歡迎催生了以下三個套件Logstash、Kibana、beat，並又針對商業應用開發了X-Pack擴展套件，下面就為各位列出各個套件分別不同的作用吧。
+
+### 各組件應用
+
+* Elasitcsearch  : 用於數據儲存與檢索，天然支持數據分片與複製，可輕鬆實現擴容，很多情況下被當成NoSql數據庫獨    立使用。
+* Logstash : 用於數據清洗、數據傳輸，可以適配多種輸入和輸出數據源，通時提供了豐富的過濾器插件。
+* Kibana : 用於數據可視化和數據分析，可看作是ElasticSearch的介面。
+* Beat 分為各個不同的組件為各系統所應用
+  1. Filebeat: Beats 組件中的一種，是一種安裝於宿主機的輕量級組件，核心作用就是將宿主機上指定的文件內容提取出來並發送到指定的目的地。
+
+
+
+## ELK Stack 7.12 安裝
+
+安裝的順須分別是E&gt;K&gt;L&gt;B，這次介紹的內容為Ubuntu20.04本機最基礎的研究環境。
+
+### 前置環境安裝
+
+1.安裝前先將套件更新一下吧
+
+`apt update`
+
+2.更新完畢後可以查看目前套件的的版本
+
+`apt list | grep -E "jdk|wget|nginx|apt-transport"`
+
+3.安裝ELK Stack 7.12所需用到的環境與安裝過程使用到的套件
+
+`apt-get install openjdk-11-jre wget apt-transport-https nginx`
+
+4.檢查前置套件是否安裝完成
+
+`apt list --installed | grep -E "jdk|wget|nginx|apt-transport"`
+
+```text
+apt-transport-https/focal-updates,now 2.0.5 all [installed]
+libnginx-mod-http-image-filter/focal-updates,now 1.18.0-0ubuntu1 amd64 [installed,automatic]
+libnginx-mod-http-xslt-filter/focal-updates,now 1.18.0-0ubuntu1 amd64 [installed,automatic]
+libnginx-mod-mail/focal-updates,now 1.18.0-0ubuntu1 amd64 [installed,automatic]
+libnginx-mod-stream/focal-updates,now 1.18.0-0ubuntu1 amd64 [installed,automatic]
+nginx-common/focal-updates,now 1.18.0-0ubuntu1 all [installed,automatic]
+nginx-core/focal-updates,now 1.18.0-0ubuntu1 amd64 [installed,automatic]
+nginx/focal-updates,now 1.18.0-0ubuntu1 all [installed]
+openjdk-11-jre-headless/focal-updates,focal-security,now 11.0.10+9-0ubuntu1~20.04 amd64 [installed,automatic]
+openjdk-11-jre/focal-updates,focal-security,now 11.0.10+9-0ubuntu1~20.04 amd64 [installed]
+wget/focal,now 1.20.3-1ubuntu1 amd64 [installed]
+```
+
+
+
+5.添加elastic彈性伸縮儲存庫
+
+   1.首先導入其GPG密鑰
+
+`wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add`
+
+   2.在以下位置創建文件/etc/apt/sources.list.d/elastic.list並在內文中添下列內容
+
+`vim /etc/apt/sources.list.d/elastic.list`
+
+```text
+deb https://artifacts.elastic.co/packages/7.x/apt stable main
+```
+
+   3.更新儲存庫
+
+`apt update`
+
+
+
+### Elasticsearch 安裝
+
+`cd /usr/local/`
+
+`curl -L -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.12.0-linux-x86_64.tar.gz`
+
+ `tar -xvf elasticsearch-7.12.0-linux-x86_64.tar.gz`
+
+`rm elasticsearch-7.12.0-linux-x86_64.tar.gz`
+
+`mv elasticsearch-7.12.0-linux-x86_64/elasticsearch`
+
+`ln -s /usr/local/elasticsearch elasticsearch`
+
+* 编辑 ./config/elasticsearch.yml
+
+`vim /usr/local/elasticsearch-7.12.0/config/elasticsearch.yml`
+
+```text
+# 添加或修改
+node.name: node-1
+#network.host:0.0.0.0 代表開給外網連線
+network.host: 0.0.0.0
+http.port: 9200
+cluster.initial_master_nodes: ["node-1"]
+```
+
+* 修改文件包含限制一个进程可以拥有的VMA\(虚拟内存区域\)的数量配置，编辑 /etc/sysctl.conf
+
+`vim /etc/sysctl.conf`
+
+```text
+# 添加或修改
+# sudo sysctl -p 使修改生效
+vm.max_map_count = 262144
+```
+
+* 修改 ECS 安全组，放行 9200 端口
+
+`ufw allow in 9200`
+
+`ufw allow in 9300`
+
+查看目前防火牆規則
+
+
+
+```text
+sudo ufw status # 查看目前防火牆規則
+sudo ufw status numbered #以數字排列目前防火牆規則
+```
+
+*  創建帳戶
+
+`adduser elasticsearch`
+
+* 将对应的文件夹权限赋给该用户
+
+`chown -R elasticsearch /usr/local/elasticsearch/elasticsearch-7.12.0`
+
+* 切换至elasticsearch用户 
+
+`su elasticsearch` 
+
+* 进入启动目录启动 /usr/local/elasticsearch-7.12.0/bin 使用后台启动方式
+
+`./elasticsearch -d`
+
+* 測試是否成功啟動
+
+ `curl -X GET "localhost:9200"`
+
+
+
+### Kibana 安裝
+
+`cd /usr/local`
+
+`curl -L -O https://artifacts.elastic.co/downloads/kibana/kibana-7.12.0-linux-x86_64.tar.gz`
+
+`tar -xvf kibana-7.12.0-linux-x86_64.tar.gz`
+
+`rm kibana-7.12.0-linux-x86_64.tar.gz`
+
+`mv kibana-7.12.0-linux-x86_64/ kibana`
+
+`cd ./kibana/`
+
+`ln -s /usr/local/kibana kibana`
+
+* 設定檔設定
+
+`vim config/kibana.yml`
+
+```text
+server.port: 5601
+server.host: "123.456.789.0"
+server.name: "kibana-test"
+elasticsearch.hosts: ["http://10.10.0.8:9200"]
+# kibana会将部分数据写入es，这个是ex中索引的名字
+kibana.index: ".kibana"
+```
+
+*  創建帳戶
+
+`adduser kibana`
+
+* 将对应的文件夹权限赋给该用户
+
+`chown -R kibana /usr/local/kibana`
+
+* 切换至kibana用户 
+
+`su kibana`
+
+* 进入启动目录启动 /usr/local/kibana/bin 使用后台启动方式
+
+`./kibana &`
+
+* 測試是否成功啟動
+
+ `http://localhost:5601`
+
+### Logstash 安裝
+
+`cd /usr/local`
+
+`curl -L -O https://artifacts.elastic.co/downloads/kibana/kibana-7.12.0-linux-x86_64.tar.gz`
+
+`tar -xvf kibana-7.12.0-linux-x86_64.tar.gz`
+
+`rm kibana-7.12.0-linux-x86_64.tar.gz`
+
+`mv kibana-7.12.0-linux-x86_64/ kibana`
+
+ `cd ./kibana/`
+
+`ln -s /usr/local/kibana kibana`
+
+*  創建帳戶
+
+`adduser kibana`
+
+* 将对应的文件夹权限赋给该用户
+
+`chown -R kibana/usr/local/kibana`
+
+* 切换至kibana用户 
+
+`su kibana`
+
+* 进入启动目录启动 /usr/local/elasticsearch-7.12.0/bin 使用后台启动方式
+
+`./kibana -d`
+
+* 測試是否成功啟動
+
+ `curl -X GET "localhost:5601"`
+
+### Filebeat 安裝
+
+`mkdir /usr/local/filebeat`
+
+`cd /usr/local/filebeat`
+
+`curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.12.0-linux-x86_64.tar.gz`
+
+ `tar -xvf filebeat-7.12.0-linux-x86_64.tar.gz`
+
+`rm filebeat-7.12.0-linux-x86_64.tar.gz`
+
+ `cd ./filebeat-7.12.0/`
+
+
+
+
+
+`cd /usr/local`
+
+`curl -L -O https://artifacts.elastic.co/downloads/kibana/kibana-7.12.0-linux-x86_64.tar.gz`
+
+`tar -xvf kibana-7.12.0-linux-x86_64.tar.gz`
+
+`rm kibana-7.12.0-linux-x86_64.tar.gz`
+
+`mv kibana-7.12.0-linux-x86_64/ kibana`
+
+ `cd ./kibana/`
+
+`ln -s /usr/local/kibana kibana`
+
+*  創建帳戶
+
+`adduser kibana`
+
+* 将对应的文件夹权限赋给该用户
+
+`chown -R kibana/usr/local/kibana`
+
+* 切换至kibana用户 
+
+`su kibana`
+
+* 进入启动目录启动 /usr/local/elasticsearch-7.12.0/bin 使用后台启动方式
+
+`./kibana -d`
+
+* 測試是否成功啟動
+
+ `curl -X GET "localhost:5601"`
+
+
+
