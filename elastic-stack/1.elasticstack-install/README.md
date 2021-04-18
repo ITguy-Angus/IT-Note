@@ -167,9 +167,9 @@ kibana.index: ".kibana"
 
 `su logstash`
 
-* 进入启动目录启动 /usr/local/logstash-7.12.0/bin 使用后台启动方式
+* 进入启动目录启动 /usr/local/logstash/bin 使用后台启动方式
 
-`./logstash -f filebeat &`
+`./bin/logstash -f config/filebeat.conf &`
 
 * 測試是否成功啟動
 
