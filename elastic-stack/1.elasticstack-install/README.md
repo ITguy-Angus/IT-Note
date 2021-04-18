@@ -153,23 +153,23 @@ kibana.index: ".kibana"
 
 `mv logstash-7.12.0-linux-x86_64/ kibana`
 
-`ln -s /usr/local/kibana kibana`
+`ln -s /usr/local/kibana logstash`
 
 *  創建帳戶
 
-`adduser kibana`
+`adduser logstash`
 
 * 将对应的文件夹权限赋给该用户
 
-`chown -R kibana/usr/local/kibana`
+`chown -R logstash/usr/local/logstash`
 
 * 切换至kibana用户 
 
-`su kibana`
+`su logstash`
 
-* 进入启动目录启动 /usr/local/elasticsearch-7.12.0/bin 使用后台启动方式
+* 进入启动目录启动 /usr/local/logstash-7.12.0/bin 使用后台启动方式
 
-`./kibana -d`
+`./logstash -f filebeat &`
 
 * 測試是否成功啟動
 
