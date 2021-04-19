@@ -20,7 +20,7 @@ description: apt安裝
 
 3.安裝ELK Stack 7.12所需用到的環境與安裝過程使用到的套件
 
-`apt-get install openjdk-11-jre wget apt-transport-https nginx`
+`apt-get install openjdk-11-jdk wget apt-transport-https nginx`
 
 4.檢查前置套件是否安裝完成
 
@@ -59,4 +59,10 @@ deb https://artifacts.elastic.co/packages/7.x/apt stable main
    3.更新儲存庫
 
 `apt update`
+
+### 安裝 Filebeat
+
+apt-get install filebeat
+
+
 
