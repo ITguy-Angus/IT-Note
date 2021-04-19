@@ -173,7 +173,7 @@ kibana.index: ".kibana"
 
 `./bin/logstash -f config/filebeat.conf &`
 
-* 測試是否成功啟動
+* 確認是否成功啟動
 
 ```text
 [1] 17978
@@ -230,17 +230,17 @@ n], :non_running_pipelines=>[]}
 
 * 安裝
 
-cd /usr/local
+`cd /usr/local`
 
-curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.12.0-linux-x86\_64.tar.gz
+`curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.12.0-linux-x86_64.tar.gz`
 
-tar -xvf filebeat-7.12.0-linux-x86\_64.tar.gz
+`tar -xvf filebeat-7.12.0-linux-x86_64.tar.gz`
 
-rm filebeat-7.12.0-linux-x86\_64.tar.gz
+`rm filebeat-7.12.0-linux-x86_64.tar.gz`
 
-mv filebeat-7.12.0-linux-x86\_64/ filebeat
+`mv filebeat-7.12.0-linux-x86_64/ filebeat`
 
-ln -s /usr/local/filebeat filebeat
+`ln -s /usr/local/filebeat filebeat`
 
 *  創建帳戶
 
@@ -278,9 +278,29 @@ logging.files:
     name: filebeat-localhost
 ```
 
-* 进入启动目录启动 /usr/local/logstash/bin 使用后台启动方式
+```text
+#複製貼上下面內容 (localhost改成自己的IP)
+name: 10.140.0.8
+output.logstash:
+    hosts:  ["10.140.0.7:5044"]
+    index: "Nginx"
+filebeat.inputs:
+    - type: log
+      paths:
+        - /var/log/nginx/access.log
+      tags: ["access"]
+#開啟debug模式
+logging.level: debug
+logging.selectors: [publish]
+logging.to_files: true
+logging.files:
+    path: /var/log/filebeat
+    name: filebeat-localhost
+```
 
-`./bin/filebeat -f config/filebeat.conf &`
+* 进入启动目录启动 /usr/local/logstash/bin 使用后台启动方式注意後面可以帶入不同設定檔檔名
+
+`/usr/local/filebeat/filebeat -c /usr/local/filebeat/nginxlog.yml &`
 
 * 測試是否成功啟動
 
