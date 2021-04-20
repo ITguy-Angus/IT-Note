@@ -15,6 +15,8 @@ ELK版本 7.1以上
 ```text
 //elasticsearch 為使用者
 su elasticsearch -c "/usr/local/elasticsearch/bin/elasticsearch-certutil cert"
+//輸入使用者密碼
+Password: 
 ```
 
 ![](https://miro.medium.com/max/888/1*pwOACP-LNGZybz_7bzRLpw.png)
@@ -37,7 +39,7 @@ xpack.security.transport.ssl.truststore.path: elastic-certificates.p12
 
 ```text
 # kill -9 $(ps aux | grep elastic | awk '{print $2}')
-# nohup su elastic -c "/usr/local/elasticsearch/bin/elasticsearch &" > /dev/null
+# ./usr/local/elasticsearch/bin/elasticsearch -d
 ```
 
 ### **3.設定預設密碼**
