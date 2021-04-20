@@ -155,7 +155,9 @@ kibana.index: ".kibana"
 
 `mv logstash-7.12.0-linux-x86_64/ logstash`
 
-`ln -s /usr/local/logstash logstash`
+~~ln -s /usr/local/logstash logstash~~
+
+
 
 *  創建帳戶
 
@@ -171,7 +173,7 @@ kibana.index: ".kibana"
 
 * 进入启动目录启动 /usr/local/logstash/bin 使用后台启动方式
 
-`./bin/logstash -f config/filebeat.conf &`
+`./bin/logstash -f config/logstash.conf &`
 
 * 確認是否成功啟動
 
