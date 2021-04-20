@@ -62,7 +62,13 @@ deb https://artifacts.elastic.co/packages/7.x/apt stable main
 
 ### 安裝 Filebeat
 
-apt-get install filebeat
+`apt-get install filebeat`
+
+`sudo chkconfig --add filebeat`
+
+`systemctl start filebeat` 
+
+`systemctl status filebeat`
 
 
 
