@@ -45,7 +45,7 @@ xpack.security.transport.ssl.truststore.path: elastic-certificates.p12
 ### **3.設定預設密碼**
 
 ```text
-# /usr/local/elasticsearch/bin/elasticsearch-setup-passwords interactive
+#/usr/local/elasticsearch/bin/elasticsearch-setup-passwords interactive
 --> y
 --> y
 --> 然後輸入想要的密碼
