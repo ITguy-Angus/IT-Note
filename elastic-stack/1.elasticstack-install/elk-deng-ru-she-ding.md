@@ -89,16 +89,21 @@ elasticsearch.password: "密碼"
 # vim /home/tool/elk-common/logstash/logstash.conf
 ```
 
-加入
+解開User and password 註解並輸入帳號密碼注意需要有" "
 
 ```text
-
+input {
+  beats {
+    port => 5044
+  }
+}
 output {
   elasticsearch {
-    ...
+    hosts => ["http://10.140.0.6:9200"]
+    index => "%{[@metadata][beat]}-%{[@metadata][version]}-%{+YYYY.MM.dd}"
     #帳號密碼需要加上""
     user => "elastic"
-    password => "密碼"
+    password => "P@ssw0rd@Data!"
   }
 }
 ```
