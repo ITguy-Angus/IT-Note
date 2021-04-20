@@ -2,7 +2,7 @@
 description: apt安裝
 ---
 
-# 1.1 ELK Stack apt 安裝方式
+# 1-1 ELK Stack apt 安裝方式
 
 ## ELK Stack 7.12 apt安裝
 
