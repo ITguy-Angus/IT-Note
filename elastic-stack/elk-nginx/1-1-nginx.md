@@ -109,5 +109,3 @@ ls -al
 修改 `nginx.yml` 配置文件，分别增加 `access` 和 `error` 的日志文件路径，注意路径最后增加 `*`，因为 `Nginx` 以日期归档日志文件  
 
 
-![](../../.gitbook/assets/tu-pian-%20%284%29.png)
-

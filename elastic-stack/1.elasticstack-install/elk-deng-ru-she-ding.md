@@ -13,10 +13,11 @@ ELK版本 7.1以上
 ### **1.產生憑證 elastict**
 
 ```text
-# su elastic -c "/usr/local/elasticsearch/bin/elasticsearch-certutil cert"
+//elasticsearch 為使用者
+su elasticsearch -c "/usr/local/elasticsearch/bin/elasticsearch-certutil cert"
 ```
 
-![](https://miro.medium.com/max/60/1*pwOACP-LNGZybz_7bzRLpw.png?q=20)![](https://miro.medium.com/max/888/1*pwOACP-LNGZybz_7bzRLpw.png)
+![](https://miro.medium.com/max/888/1*pwOACP-LNGZybz_7bzRLpw.png)
 
 輸入 `config/elastic-certificates.p12` ，然後Enter跳過密碼
 
