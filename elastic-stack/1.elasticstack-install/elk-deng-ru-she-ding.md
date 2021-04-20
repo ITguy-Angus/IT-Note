@@ -92,11 +92,13 @@ elasticsearch.password: "密碼"
 加入
 
 ```text
+
 output {
   elasticsearch {
     ...
-    user => elastic
-    password => 密碼
+    #帳號密碼需要加上""
+    user => "elastic"
+    password => "密碼"
   }
 }
 ```
