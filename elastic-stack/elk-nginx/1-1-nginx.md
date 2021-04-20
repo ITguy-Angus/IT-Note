@@ -1,4 +1,4 @@
-# 1-1 Nginx
+# Nginx
 
 ## Filebeat 設定相關
 
