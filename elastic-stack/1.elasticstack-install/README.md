@@ -306,6 +306,8 @@ logging.files:
 
 * 測試是否成功啟動
 
+`ps -aux | grep filebeat`
+
 
 
 
