@@ -14,7 +14,7 @@
 # 下载
 wget https://downloads.apache.org/zookeeper/zookeeper-3.6.3/apache-zookeeper-3.6.3-bin.tar.gz
 # 解压
-tar -zxvf zookeeper-3.6.3.tar.gz
+tar -zxvf apache-zookeeper-3.6.3-bin.tar.gz
 复制代码
 ```
 
@@ -28,8 +28,8 @@ zookeeper01 配置：
 tickTime=2000
 initLimit=10
 syncLimit=5
-dataDir=/usr/local/zookeeper-cluster/data/01
-dataLogDir=/usr/local/zookeeper-cluster/log/01
+dataDir=/usr/local/zookeeper/data/01
+dataLogDir=/usr/local/zookeeper/log/01
 clientPort=2181
 
 # server.1 这个1是服务器的标识，可以是任意有效数字，标识这是第几个服务器节点，这个标识要写到dataDir目录下面myid文件里
@@ -48,8 +48,8 @@ zookeeper02 配置，与 zookeeper01 相比，只有 `dataLogDir`、`dataLogDir`
 tickTime=2000
 initLimit=10
 syncLimit=5
-dataDir=/usr/local/zookeeper-cluster/data/02
-dataLogDir=/usr/local/zookeeper-cluster/log/02
+dataDir=/usr/local/zookeeper/data/02
+dataLogDir=/usr/local/zookeeper/log/02
 clientPort=2182
 server.1=127.0.0.1:2287:3387
 server.2=127.0.0.1:2288:3388
@@ -63,8 +63,8 @@ zookeeper03 配置，与 zookeeper01，02 相比，也只有 `dataLogDir`、`dat
 tickTime=2000
 initLimit=10
 syncLimit=5
-dataDir=/usr/local/zookeeper-cluster/data/03
-dataLogDir=/usr/local/zookeeper-cluster/log/03
+dataDir=/usr/local/zookeeper/data/03
+dataLogDir=/usr/local/zookeeper/log/03
 clientPort=2183
 server.1=127.0.0.1:2287:3387
 server.2=127.0.0.1:2288:3388
@@ -89,11 +89,11 @@ server.3=127.0.0.1:2289:3389
 
 ```text
 # dataDir
-mkdir -vp  /usr/local/zookeeper-cluster/data/01
+mkdir -vp  /usr/local/zookeeper/data/01
 # dataDir
-mkdir -vp  /usr/local/zookeeper-cluster/data/02
+mkdir -vp  /usr/local/zookeeper/data/02
 # dataDir
-mkdir -vp  /usr/local/zookeeper-cluster/data/03
+mkdir -vp  /usr/local/zookeeper/data/03
 复制代码
 ```
 
@@ -101,11 +101,11 @@ mkdir -vp  /usr/local/zookeeper-cluster/data/03
 
 ```text
 #server1
-echo "1" > /usr/local/zookeeper-cluster/data/01/myid
+echo "1" > /usr/local/zookeeper/data/01/myid
 #server2
-echo "2" > /usr/local/zookeeper-cluster/data/02/myid
+echo "2" > /usr/local/zookeeper/data/02/myid
 #server3
-echo "3" > /usr/local/zookeeper-cluster/data/03/myid
+echo "3" > /usr/local/zookeeper/data/03/myid
 复制代码
 ```
 
@@ -127,7 +127,7 @@ echo "3" > /usr/local/zookeeper-cluster/data/03/myid
 
 使用 jps 查看进程，并且使用 `zkServer.sh status` 查看集群各个节点状态。如图三个节点进程均启动成功，并且两个节点为 follower 节点，一个节点为 leader 节点。
 
-![https://github.com/heibaiying](https://user-gold-cdn.xitu.io/2019/9/21/16d52d4ad1bc4104?imageView2/0/w/1280/h/960/format/webp/ignore-error/1)
+![](../../.gitbook/assets/tu-pian-.png)
 
 ### 二、Kafka集群搭建
 
@@ -225,7 +225,7 @@ bin/kafka-topics.sh --describe --bootstrap-server hadoop001:9092 --topic my-repl
 复制代码
 ```
 
-![https://github.com/heibaiying](https://user-gold-cdn.xitu.io/2019/9/21/16d52d5018f18b8a?imageView2/0/w/1280/h/960/format/webp/ignore-error/1)
+![](../../.gitbook/assets/tu-pian-%20%281%29.png)
 
 可以看到分区 0 的有 0,1,2 三个副本，且三个副本都是可用副本，都在 ISR\(in-sync Replica 同步副本\) 列表中，其中 1 为首领副本，此时代表集群已经搭建成功。
 
