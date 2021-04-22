@@ -8,6 +8,7 @@
   * [ELK Stack tar安裝方式](elastic-stack/1.elasticstack-install/elk-stack-tar-an-zhuang-fang-shi.md)
   * [ELK Stack apt 安裝方式](elastic-stack/1.elasticstack-install/apt-install.md)
   * [ELK 登入設定](elastic-stack/1.elasticstack-install/elk-deng-ru-she-ding.md)
+  * [基于 ZooKeeper 搭建 Kafka 高可用集群](elastic-stack/1.elasticstack-install/ji-yu-zookeeper-da-jian-kafka-gao-ke-yong-ji-qun.md)
 * [ELK 日誌監控設定彙總](elastic-stack/elk-nginx/README.md)
   * [Nginx](elastic-stack/elk-nginx/1-1-nginx.md)
 
