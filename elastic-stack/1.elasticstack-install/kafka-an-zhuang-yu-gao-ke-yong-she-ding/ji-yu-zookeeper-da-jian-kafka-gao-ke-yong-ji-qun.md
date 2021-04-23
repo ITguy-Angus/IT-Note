@@ -190,7 +190,7 @@ server-3.properties：
 
 ```text
 broker.id=2
-listeners=PLAINTEXT://hadoop001:9092
+listeners=PLAINTEXT://10.140.0.12:9092
 log.dirs=/usr/local/kafka-logs/02
 zookeeper.connect=10.140.0.10:2181,10.140.0.11:2181,10.140.0.12:2181
 复制代码
