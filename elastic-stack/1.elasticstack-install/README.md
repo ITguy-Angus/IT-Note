@@ -2,7 +2,7 @@
 description: ElasticStack 介紹與安裝
 ---
 
-# 1.Elastic Stack 介紹與安裝
+# Elastic Stack 介紹與安裝
 
 ## ELK Stack 簡介
 
