@@ -2,6 +2,8 @@
 
 ## Kafka 系列（二）—— 基于 ZooKeeper 搭建 Kafka 偽高可用集群\[三個節點在同一台主機\]
 
+Zookeeper 依靠java運行需先安裝Openjava-11-jdk 套件
+
 ### 一、Zookeeper集群搭建
 
 为保证集群高可用，Zookeeper 集群的节点数最好是奇数，最少有三个节点，所以这里搭建一个三个节点的集群。
