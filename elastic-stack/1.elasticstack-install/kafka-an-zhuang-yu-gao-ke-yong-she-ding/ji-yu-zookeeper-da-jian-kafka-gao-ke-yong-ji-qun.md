@@ -1,6 +1,6 @@
 # 基于 ZooKeeper 搭建 Kafka 高可用集群
 
-## Kafka 系列（二）—— 基于 ZooKeeper 搭建 Kafka 高可用集群
+## Kafka 系列（二）—— 基于 ZooKeeper 搭建 Kafka 偽高可用集群\[三個節點在同一台主機\]
 
 ### 一、Zookeeper集群搭建
 
@@ -115,11 +115,11 @@ echo "3" > /usr/local/zookeeper/data/03/myid
 
 ```text
 # 启动节点1
-/usr/app/zookeeper-cluster/zookeeper01/bin/zkServer.sh start
+/usr/local/zookeeper/bin/zkServer.sh start
 # 启动节点2
-/usr/app/zookeeper-cluster/zookeeper02/bin/zkServer.sh start
+/usr/local/zookeeper/bin/zkServer.sh start
 # 启动节点3
-/usr/app/zookeeper-cluster/zookeeper03/bin/zkServer.sh start
+/usr/local/zookeeper/bin/zkServer.sh start
 复制代码
 ```
 
