@@ -19,14 +19,23 @@ filebeat收集需要提取的日誌檔案， 將日誌檔案轉存到kafka叢集
 修改全域性配置檔案 ，作用於所有使用者：
 
 ```text
-sudo vi /etc/profileexport JAVA_HOME=JDK安裝路徑export PATH=$JAVA_HOME/bin:$PATH
+sudo vi /etc/profile
+export JAVA_HOME=JDK安裝路徑
+export PATH=$JAVA_HOME/bin:$PATH
 ```
 
 #### 系統調優
 
 ```text
-vim /etc/sysctl.conffs.file-max=65536vm.max_map_count = 262144
-vim /etc/security/limits.conf* soft nofile 65535* hard nofile 131072* soft nproc 2048* hard nproc 4096
+vim /etc/sysctl.conf
+fs.file-max=65536
+vm.max_map_count = 262144
+
+vim /etc/security/limits.conf
+* soft nofile 65535
+* hard nofile 131072
+* soft nproc 2048
+* hard nproc 4096
 ```
 
 #### 使用的軟體版本
@@ -64,7 +73,16 @@ vim config/zookeeper.properties
 修改配置內容：
 
 ```text
-clientPort=2181maxClientCnxns=100tickTime=2000initLimit=10syncLimit=5dataDir=/usr/local/kafka/zookeeper/datadataLogDir=/usr/local/kafka/zookeeper/logserver.1=10.16.10.113:12888:13888server.2=10.16.10.114:12888:13888server.3=10.16.8.187:12888:13888
+clientPort=2181
+maxClientCnxns=100
+tickTime=2000
+initLimit=10
+syncLimit=5
+dataDir=/usr/local/kafka/zookeeper/data
+dataLogDir=/usr/local/kafka/zookeeper/log
+server.1=10.16.10.113:12888:13888
+server.2=10.16.10.114:12888:13888
+server.3=10.16.8.187:12888:13888
 ```
 
 注意：dataDir、dataLogDir檔案目錄需要手動建立。
@@ -80,7 +98,26 @@ vim config/server.properties
 修改配置內容：
 
 ```text
-broker.id=1prot = 9092host.name = 10.16.10.113num.network.threads=3num.io.threads=8socket.send.buffer.bytes=102400socket.receive.buffer.bytes=102400socket.request.max.bytes=104857600log.dirs=/usr/local/kafka-logsnum.partitions=16num.recovery.threads.per.data.dir=1offsets.topic.replication.factor=1transaction.state.log.replication.factor=1transaction.state.log.min.isr=1log.retention.hours=168log.segment.bytes=1073741824log.retention.check.interval.ms=300000zookeeper.connect=10.16.10.113:2181,10.16.10.114:2181,10.16.8.187:2181zookeeper.connection.timeout.ms=6000group.initial.rebalance.delay.ms=0
+broker.id=1
+prot = 9092
+host.name = 10.16.10.113
+num.network.threads=3
+num.io.threads=8
+socket.send.buffer.bytes=102400
+socket.receive.buffer.bytes=102400
+socket.request.max.bytes=104857600
+log.dirs=/usr/local/kafka-logs
+num.partitions=16
+num.recovery.threads.per.data.dir=1
+offsets.topic.replication.factor=1
+transaction.state.log.replication.factor=1
+transaction.state.log.min.isr=1
+log.retention.hours=168
+log.segment.bytes=1073741824
+log.retention.check.interval.ms=300000
+zookeeper.connect=10.16.10.113:2181,10.16.10.114:2181,10.16.8.187:2181
+zookeeper.connection.timeout.ms=6000
+group.initial.rebalance.delay.ms=0
 ```
 
 注意:每臺伺服器除broker.id 和 host.name 兩個屬性需要修改之外，其他屬性保持一致。
@@ -146,13 +183,27 @@ vim elasticsearch/config/elasticsearch.yml
 修改配置：
 
 ```text
-###配置解釋# cluster.name 叢集名稱# node.name 節點主機名# node.master 是否參與主節點競選# node.data:true  指定該節點是否儲存索引資料，預設為true。本例沒配置，所有節點都儲存
+###配置解釋# cluster.name 
+叢集名稱# node.name 
+節點主機名# node.master 
+是否參與主節點競選# node.data:true  
+指定該節點是否儲存索引資料，預設為true。本例沒配置，所有節點都儲存
 ```
 
 包括主節點
 
 ```text
-# discovery.zen.ping.unicast.hosts 配置上elasticsearch 叢集除本機外其他機器# cluster.initial_master_nodes 引導啟動叢集的機器IP或者主機名# http.port http埠，kibana中會用到 。# transport.tcp.port 設定節點間互動的tcp埠，預設是9300。cluster.name: elkmasternode.name: 10.16.3.165node.master: truepath.logs: /usr/local/data/log/network.host: 10.16.3.165http.port: 9200discovery.zen.ping.unicast.hosts: ["10.16.10.113","10.16.10.114"]cluster.initial_master_nodes: ["10.16.3.165"]
+# discovery.zen.ping.unicast.hosts 配置上elasticsearch 叢集除本機外其他機器
+# cluster.initial_master_nodes 引導啟動叢集的機器IP或者主機名
+# http.port http埠，kibana中會用到 。
+# transport.tcp.port 設定節點間互動的tcp埠，預設是9300。
+cluster.name: elkmaster
+node.name: 10.16.3.165
+node.master: true
+path.logs: /usr/local/data/log/network.host: 10.16.3.165
+http.port: 9200
+discovery.zen.ping.unicast.hosts: ["10.16.10.113","10.16.10.114"]
+cluster.initial_master_nodes: ["10.16.3.165"]
 ```
 
 注意：其他兩臺伺服器，作為solver,需要修改cluster.name、node.name、network.host為自身的配置node.naster: false。最後兩個屬性根據伺服器內容進行修改。
