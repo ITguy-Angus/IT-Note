@@ -20,7 +20,9 @@ filebeat收集需要提取的日誌檔案， 將日誌檔案轉存到kafka叢集
 
 ```text
 sudo vi /etc/profile
+
 export JAVA_HOME=JDK安裝路徑
+
 export PATH=$JAVA_HOME/bin:$PATH
 ```
 
@@ -28,13 +30,21 @@ export PATH=$JAVA_HOME/bin:$PATH
 
 ```text
 vim /etc/sysctl.conf
+
 fs.file-max=65536
+
 vm.max_map_count = 262144
 
+
+
 vim /etc/security/limits.conf
+
 * soft nofile 65535
+
 * hard nofile 131072
+
 * soft nproc 2048
+
 * hard nproc 4096
 ```
 
@@ -74,14 +84,23 @@ vim config/zookeeper.properties
 
 ```text
 clientPort=2181
+
 maxClientCnxns=100
+
 tickTime=2000
+
 initLimit=10
+
 syncLimit=5
+
 dataDir=/usr/local/kafka/zookeeper/data
+
 dataLogDir=/usr/local/kafka/zookeeper/log
+
 server.1=10.16.10.113:12888:13888
+
 server.2=10.16.10.114:12888:13888
+
 server.3=10.16.8.187:12888:13888
 ```
 
@@ -99,24 +118,43 @@ vim config/server.properties
 
 ```text
 broker.id=1
+
 prot = 9092
+
 host.name = 10.16.10.113
+
 num.network.threads=3
+
 num.io.threads=8
+
 socket.send.buffer.bytes=102400
+
 socket.receive.buffer.bytes=102400
+
 socket.request.max.bytes=104857600
+
 log.dirs=/usr/local/kafka-logs
+
 num.partitions=16
+
 num.recovery.threads.per.data.dir=1
+
 offsets.topic.replication.factor=1
+
 transaction.state.log.replication.factor=1
+
 transaction.state.log.min.isr=1
+
 log.retention.hours=168
+
 log.segment.bytes=1073741824
+
 log.retention.check.interval.ms=300000
+
 zookeeper.connect=10.16.10.113:2181,10.16.10.114:2181,10.16.8.187:2181
+
 zookeeper.connection.timeout.ms=6000
+
 group.initial.rebalance.delay.ms=0
 ```
 
@@ -183,26 +221,42 @@ vim elasticsearch/config/elasticsearch.yml
 修改配置：
 
 ```text
-###配置解釋# cluster.name 
-叢集名稱# node.name 
-節點主機名# node.master 
-是否參與主節點競選# node.data:true  
-指定該節點是否儲存索引資料，預設為true。本例沒配置，所有節點都儲存
+###配置解釋
+
+# cluster.name 叢集名稱
+
+# node.name 節點主機名
+
+# node.master 是否參與主節點競選
+
+# node.data:true  指定該節點是否儲存索引資料，預設為true。本例沒配置，所有節點都儲
 ```
 
 包括主節點
 
 ```text
 # discovery.zen.ping.unicast.hosts 配置上elasticsearch 叢集除本機外其他機器
+
 # cluster.initial_master_nodes 引導啟動叢集的機器IP或者主機名
+
 # http.port http埠，kibana中會用到 。
+
 # transport.tcp.port 設定節點間互動的tcp埠，預設是9300。
+
 cluster.name: elkmaster
+
 node.name: 10.16.3.165
+
 node.master: true
-path.logs: /usr/local/data/log/network.host: 10.16.3.165
+
+path.logs: /usr/local/data/log/
+
+network.host: 10.16.3.165
+
 http.port: 9200
+
 discovery.zen.ping.unicast.hosts: ["10.16.10.113","10.16.10.114"]
+
 cluster.initial_master_nodes: ["10.16.3.165"]
 ```
 
@@ -221,7 +275,17 @@ vim kibana/config/kibana.yml
 修改配置：
 
 ```text
-# i18n.locale: "zh-CN"  web介面中文# server.port  監聽埠server.port: 5601server.host: "10.16.3.165"elasticsearch.hosts: ["http://10.16.3.165:9200"]i18n.locale: "zh-CN"
+# i18n.locale: "zh-CN"  web介面中文
+
+# server.port  監聽埠
+
+server.port: 5601
+
+server.host: "10.16.3.165"
+
+elasticsearch.hosts: ["http://10.16.3.165:9200"]
+
+i18n.locale: "zh-CN"
 ```
 
 **驗證**
@@ -233,7 +297,8 @@ vim kibana/config/kibana.yml
 命令：
 
 ```text
-nohup sh elasticsearch &# 正確的用法是下面/bin/elasticsearch -d
+nohup sh elasticsearch &
+# 正確的用法是下面/bin/elasticsearch -d
 ```
 
 **啟動kibana**
@@ -265,7 +330,27 @@ vim filebeat/filebeat.yml
 修改配置：
 
 ```text
-filebeat.inputs:- type: log  enabled: true  paths:    - /data/home/app/domains/cpay_domain/logs/cpay-tms-gate.log output.kafka:    enable: true    hosts: ["10.16.8.187:9092"]    topic: es-tmslogs    compression: gzipmax_message_bytes: 100000
+filebeat.inputs:
+
+- type: log
+
+  enabled: true
+
+  paths:
+
+    - /data/home/app/domains/cpay_domain/logs/cpay-tms-gate.log
+
+ output.kafka:
+
+    enable: true
+
+    hosts: ["10.16.8.187:9092"]
+
+    topic: es-tmslogs
+
+    compression: gzip
+
+max_message_bytes: 100000
 ```
 
 注意：paths表示需要提取的日誌的路徑，將日誌輸出到kafka中，建立topic
@@ -291,7 +376,31 @@ vim  logstash/config/logstashfortms.conf
 配置內容：
 
 ```text
-input{    kafka{        bootstrap_servers => "10.16.10.113:9092,10.16.10.114:9092,10.16.8.187:9092"        topics => ["es-tmslogs"]        codec => json    }}output{    elasticsearch {        hosts => ["10.16.3.165:9200"]        index => "logstash-%{+YYYY.MM.dd}"    }}
+input{
+
+    kafka{
+
+        bootstrap_servers => "10.16.10.113:9092,10.16.10.114:9092,10.16.8.187:9092"
+
+        topics => ["es-tmslogs"]
+
+        codec => json
+
+    }
+
+}
+
+output{
+
+    elasticsearch {
+
+        hosts => ["10.16.3.165:9200"]
+
+        index => "logstash-%{+YYYY.MM.dd}"
+
+    }
+
+}
 ```
 
 啟動logstash:
