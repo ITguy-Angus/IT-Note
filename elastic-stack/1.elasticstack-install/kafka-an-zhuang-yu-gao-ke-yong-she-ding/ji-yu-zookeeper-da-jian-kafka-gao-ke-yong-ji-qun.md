@@ -223,7 +223,7 @@ bin/kafka-topics.sh --create --bootstrap-server 10.140.0.10:9092 \
 创建后可以使用以下命令查看创建的主题信息：
 
 ```text
-bin/kafka-topics.sh --describe --bootstrap-server hadoop001:9092 --topic my-replicated-topic
+bin/kafka-topics.sh --describe --bootstrap-server 10.140.0.10:9092 --topic my-replicated-topic
 复制代码
 ```
 

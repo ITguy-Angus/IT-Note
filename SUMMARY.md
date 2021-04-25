@@ -14,6 +14,7 @@
     * [KIP500&Kraft](elastic-stack/1.elasticstack-install/kafka-an-zhuang-yu-gao-ke-yong-she-ding/kip500-and-kraft.md)
   * [ELK Log收集實戰](elastic-stack/1.elasticstack-install/elk-nginx/README.md)
     * [Nginx](elastic-stack/1.elasticstack-install/elk-nginx/1-1-nginx.md)
-  * [ELK 學習筆記](elastic-stack/1.elasticstack-install/elk-xue-xi-bi-ji.md)
+  * [ELK 學習筆記](elastic-stack/1.elasticstack-install/elk-xue-xi-bi-ji/README.md)
+    * [EZKLK 架設實戰](elastic-stack/1.elasticstack-install/elk-xue-xi-bi-ji/ezklk-jia-she-shi-zhan.md)
 * [Zookeeper](elastic-stack/zookeeper.md)
 
