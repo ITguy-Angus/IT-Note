@@ -54,7 +54,7 @@ vim /etc/security/limits.conf
 
 ### &lt;/&gt;  應用安裝
 
-#### kafka、zookeeper叢集搭建
+### kafka、zookeeper叢集搭建
 
 在10.16.10.113、10.16.10.114、10.16.8.187伺服器中搭建kafka叢集，關閉防火牆
 
@@ -70,7 +70,7 @@ systemctl stop firewalld
 systemctl status firewalld
 ```
 
-**zookeeper搭建**
+### **zookeeper搭建**
 
 本次直接使用kafka自帶的zookeeper，不需要單獨下載zookeeper
 
@@ -317,7 +317,9 @@ nohup sh kibana &
 
 ![](https://mdimg.wxwenku.com/getimg/356ed03bdc643f9448b3f6485edc229bc3a34585ac7b7fe628452cf56b09fc310cf9ee2797a2722bee6f3efe2e77881a.jpg)
 
-#### filebeat安裝
+#### 
+
+### filebeat安裝
 
 在10.16.3.166伺服器搭建filebeat服務
 
@@ -363,7 +365,7 @@ max_message_bytes: 100000
 ./filebeat -e -c filebeat.yml
 ```
 
-#### logstash安裝
+### logstash安裝
 
 在10.16.3.165伺服器搭建logstash服務
 
