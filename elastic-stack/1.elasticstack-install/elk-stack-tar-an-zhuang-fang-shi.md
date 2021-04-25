@@ -117,7 +117,7 @@ kibana.index: ".kibana"
 
 * 进入启动目录启动 /usr/local/kibana/bin 使用后台启动方式
 
-`./kibana &`
+`nohup ./kibana &`
 
 * 測試是否成功啟動
 
