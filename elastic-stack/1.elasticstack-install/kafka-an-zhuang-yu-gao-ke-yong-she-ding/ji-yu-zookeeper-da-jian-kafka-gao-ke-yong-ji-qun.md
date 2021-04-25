@@ -214,7 +214,7 @@ bin/kafka-server-start.sh config/server-3.properties &
 创建测试主题：
 
 ```text
-bin/kafka-topics.sh --create --bootstrap-server hadoop001:9092 \
+bin/kafka-topics.sh --create --bootstrap-server 10.140.0.10:9092 \
 					--replication-factor 3 \
 					--partitions 1 --topic my-replicated-topic
 复制代码
