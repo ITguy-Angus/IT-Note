@@ -521,7 +521,31 @@ bin/kafka-topics.sh --describe --bootstrap-server 10.140.0.10:9092 --topic my-re
 
 ## Filebeat 與Kafka 對接
 
+修改配置：
 
+```text
+filebeat.inputs:
+
+- type: log
+
+  enabled: true
+
+  paths:
+
+    - /data/home/app/domains/cpay_domain/logs/cpay-tms-gate.log
+
+ output.kafka:
+
+    enable: true
+
+    hosts: ["10.16.8.187:9092"]
+
+    topic: es-tmslogs
+
+    compression: gzip
+
+max_message_bytes: 100000
+```
 
 
 
