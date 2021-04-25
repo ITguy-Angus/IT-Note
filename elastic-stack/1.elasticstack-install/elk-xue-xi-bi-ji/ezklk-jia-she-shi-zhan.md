@@ -296,7 +296,7 @@ logging.files:
 
 Zookeeper 依靠java運行需先安裝Openjava-11-jdk 套件
 
-### 一、Zookeeper集群搭建
+### Zookeeper集群搭建
 
 为保证集群高可用，Zookeeper 集群的节点数最好是奇数，最少有三个节点，所以这里搭建一个三个节点的集群。
 
@@ -423,7 +423,7 @@ echo "3" > /usr/local/zookeeper/data/03/myid
 
 ![](../../../.gitbook/assets/tu-pian-.png)
 
-### 二、Kafka集群搭建
+### Kafka集群搭建
 
 #### 2.1 下载解压
 
@@ -518,6 +518,8 @@ bin/kafka-topics.sh --create --bootstrap-server 10.140.0.10:9092 \
 bin/kafka-topics.sh --describe --bootstrap-server 10.140.0.10:9092 --topic my-replicated-topic
 复制代码
 ```
+
+## Filebeat 與Kafka 對接
 
 
 
