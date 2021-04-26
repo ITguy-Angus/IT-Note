@@ -505,22 +505,22 @@ bin/kafka-server-start.sh config/server-3.properties &
 
 ```text
 # 建立topic
-/opt/kafka/bin/kafka-topics.sh --create  --zookeeper 10.140.0.10:9092,10.140.0.11:9092,10.140.0.12:9092 --partitions 3 --replication-factor 3 --topic kafkatest
+/usr/local/kafka/bin/kafka-topics.sh --create  --zookeeper 10.140.0.10:9092,10.140.0.11:9092,10.140.0.12:9092 --partitions 3 --replication-factor 3 --topic kafkatest
 ```
 
 ```text
 # 獲取toppid
-/opt/kafka/bin/kafka-topics.sh --describe --zookeeper 10.140.0.10:9092,10.140.0.11:9092,10.140.0.12:9092 --topic kafkatest
+/usr/local/kafka/bin/kafka-topics.sh --describe --zookeeper 10.140.0.10:9092,10.140.0.11:9092,10.140.0.12:9092 --topic kafkatest
 ```
 
 ```text
 # 刪除topic
-/opt/kafka/bin/kafka-topics.sh --delete --zookeeper 10.140.0.10:9092,10.140.0.11:9092,10.140.0.12:9092 --topic kafkatest
+/usr/local/kafka/bin/kafka-topics.sh --delete --zookeeper 10.140.0.10:9092,10.140.0.11:9092,10.140.0.12:9092 --topic kafkatest
 ```
 
 ```text
 # 你可以通过命令来查看所有topic
-./bin/kafka-topics --zookeeper {zookeeper server} --list 来查看所有topic
+/usr/local/kafka/bin/kafka-topics --zookeeper {zookeeper server} --list 来查看所有topic
 ```
 
 ### 
