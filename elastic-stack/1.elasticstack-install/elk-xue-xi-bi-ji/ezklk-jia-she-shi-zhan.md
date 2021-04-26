@@ -155,7 +155,7 @@ kibana.index: ".kibana"
 
 * 进入启动目录启动 /usr/local/logstash/bin 使用后台启动方式
 
-`./bin/logstash -f config/logstash.conf &`
+`nohup ./bin/logstash -f config/logstash.conf &`
 
 * 確認是否成功啟動
 
@@ -510,7 +510,7 @@ bin/kafka-server-start.sh config/server-3.properties &
 
 ```text
 # 獲取toppid
-/usr/local/kafka/bin/kafka-topics.sh --describe --zookeeper 10.140.0.10:9092,10.140.0.11:9092,10.140.0.12:9092 --topic kafkatest
+/usr/local/kafka/bin/kafka-topics.sh --describe --bootstrap-server 10.140.0.10:9092 --topic my-replicated-topic
 ```
 
 ```text
