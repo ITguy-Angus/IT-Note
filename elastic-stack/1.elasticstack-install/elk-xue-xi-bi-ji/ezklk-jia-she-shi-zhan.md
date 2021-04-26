@@ -522,7 +522,7 @@ bin/kafka-server-start.sh config/server-3.properties &
 
 ```text
 # 你可以通过命令来查看所有topic
-/usr/local/kafka/bin/kafka-topics --zookeeper {zookeeper server} --list 来查看所有topic
+/usr/local/kafka/bin/kafka-topics --zookeeper {zookeeper server} --list
 ```
 
 ### 
