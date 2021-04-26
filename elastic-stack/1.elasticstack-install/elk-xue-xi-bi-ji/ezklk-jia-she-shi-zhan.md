@@ -517,12 +517,12 @@ bin/kafka-server-start.sh config/server-3.properties &
 
 ```text
 # 刪除topic
-/usr/local/kafka/bin/kafka-topics.sh --delete --zookeeper 10.140.0.10:9092,10.140.0.11:9092,10.140.0.12:9092 --topic kafkatest
+/usr/local/kafka/bin/kafka-topics.sh --delete --bootstrap-server 10.140.0.10:9092,10.140.0.11:9092,10.140.0.12:9092 --topic kafkatest
 ```
 
 ```text
 # 你可以通过命令来查看所有topic
-/usr/local/kafka/bin/kafka-topics --zookeeper 10.140.0.10:9092,10.140.0.11:9092,10.140.0.12:9092 --list
+/usr/local/kafka/bin/kafka-topics.sh --bootstrap-server 10.140.0.10:9092,10.140.0.11:9092,10.140.0.12:9092 --list
 ```
 
 ### 
