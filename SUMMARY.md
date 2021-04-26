@@ -16,6 +16,7 @@
     * [Nginx](elastic-stack/1.elasticstack-install/elk-nginx/1-1-nginx.md)
   * [ELK 學習筆記](elastic-stack/1.elasticstack-install/elk-xue-xi-bi-ji/README.md)
     * [EZKLK 架設實戰](elastic-stack/1.elasticstack-install/elk-xue-xi-bi-ji/ezklk-jia-she-shi-zhan.md)
+    * [如何彻底删除Kafka中的topic \(marked for deletion\)](elastic-stack/1.elasticstack-install/elk-xue-xi-bi-ji/ru-he-che-di-shan-chu-kafka-zhong-de-topic-marked-for-deletion.md)
     * [EBLK之2---EBLK](elastic-stack/1.elasticstack-install/elk-xue-xi-bi-ji/eblk-zhi-2eblk.md)
     * [ELK+FileBeat+Kafka分散式系統搭建圖文教程](elastic-stack/1.elasticstack-install/elk-xue-xi-bi-ji/elk+filebeat+kafka-fen-san-shi-xi-tong-da-jian-tu-wen-jiao-cheng.md)
 * [Zookeeper](elastic-stack/zookeeper.md)

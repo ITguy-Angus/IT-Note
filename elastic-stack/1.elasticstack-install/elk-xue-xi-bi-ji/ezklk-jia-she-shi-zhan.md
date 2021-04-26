@@ -284,7 +284,7 @@ logging.files:
 
 * 进入启动目录启动 /usr/local/logstash/bin 使用后台启动方式注意後面可以帶入不同設定檔檔名
 
-`/usr/local/filebeat/filebeat -c /usr/local/filebeat/nginxlog.yml &`
+`nohup ./filebeat -e -c nginx.yml &`
 
 * 測試是否成功啟動
 
@@ -503,23 +503,31 @@ bin/kafka-server-start.sh config/server-3.properties &
 
 #### 2.5 创建测试主题
 
-创建测试主题：
-
 ```text
-bin/kafka-topics.sh --create --bootstrap-server 10.140.0.10:9092 \
-					--replication-factor 3 \
-					--partitions 1 --topic my-replicated-topic
-复制代码
+# 建立topic
+/opt/kafka/bin/kafka-topics.sh --create  --zookeeper 10.140.0.10:9092,10.140.0.11:9092,10.140.0.12:9092 --partitions 3 --replication-factor 3 --topic kafkatest
 ```
 
-创建后可以使用以下命令查看创建的主题信息：
-
 ```text
-bin/kafka-topics.sh --describe --bootstrap-server 10.140.0.10:9092 --topic my-replicated-topic
-复制代码
+# 獲取toppid
+/opt/kafka/bin/kafka-topics.sh --describe --zookeeper 10.140.0.10:9092,10.140.0.11:9092,10.140.0.12:9092 --topic kafkatest
 ```
 
-###  Filebeat 與Kafka 對接
+```text
+# 刪除topic
+/opt/kafka/bin/kafka-topics.sh --delete --zookeeper 10.140.0.10:9092,10.140.0.11:9092,10.140.0.12:9092 --topic kafkatest
+```
+
+```text
+# 你可以通过命令来查看所有topic
+./bin/kafka-topics --zookeeper {zookeeper server} --list 来查看所有topic
+```
+
+### 
+
+### 
+
+### Filebeat 與Kafka 對接
 
 修改配置：
 

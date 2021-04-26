@@ -1591,12 +1591,10 @@ cat /data/zookeeper/myid
 
 ```text
 # 一個節點上建立一個頻道
-/opt/zookeeper/bin/zkCli.sh -server 10.0.0.51:2181
-create /test "hello"
+/opt/zookeeper/bin/zkCli.sh -server 10.0.0.51:2181 create /test "hello"
 
 # 其他節點上看能否接收到
-/opt/zookeeper/bin/zkCli.sh -server 10.0.0.52:2181
-get /test
+/opt/zookeeper/bin/zkCli.sh -server 10.0.0.52:2181 get /test
 ```
 
 ### kafka叢集部署 <a id="kafka&#x53E2;&#x96C6;&#x90E8;&#x7F72;"></a>
