@@ -635,7 +635,9 @@ output {
 
 ### filebeat Topic進入kafka 後只有 1個partition 1ReplicationFactor
 
+1.嘗試是否可以消費
 
+`bin/kafka-console-consumer.sh --bootstrap-server 10.140.0.10:2181 --topic logstash-nginx --from-beginning`                                                                   
 
 ### F&gt;K&gt;L&gt;E&gt;K 無法看到index 在kibana上面
 
