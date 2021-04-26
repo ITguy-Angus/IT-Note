@@ -155,7 +155,7 @@ kibana.index: ".kibana"
 
 * 进入启动目录启动 /usr/local/logstash/bin 使用后台启动方式
 
-`nohup ./bin/logstash -f config/logstash.conf &`
+`nohup bin/logstash -f config/logstash.conf &`
 
 * 確認是否成功啟動
 
