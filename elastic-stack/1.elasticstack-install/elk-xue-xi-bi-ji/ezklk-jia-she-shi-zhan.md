@@ -519,35 +519,66 @@ bin/kafka-topics.sh --describe --bootstrap-server 10.140.0.10:9092 --topic my-re
 复制代码
 ```
 
-## Filebeat 與Kafka 對接
+###  Filebeat 與Kafka 對接
 
 修改配置：
 
 ```text
 filebeat.inputs:
 
-- type: log
-
-  enabled: true
-
-  paths:
-
-    - /data/home/app/domains/cpay_domain/logs/cpay-tms-gate.log
-
+  - type: log
+  
+    paths:
+      
+  - /var/log/nginx/access.log
+          
+    tags: ["access"]
+      
+    scan_frequency: 5s
+      
  output.kafka:
 
     enable: true
 
-    hosts: ["10.16.8.187:9092"]
+    hosts: ["10.140.0.10:9092"]
 
-    topic: es-tmslogs
+    topic: nginx-logs
 
     compression: gzip
 
 max_message_bytes: 100000
 ```
 
+### Logstash 對接 Kafka
 
 
-\`\`
+
+```text
+input{
+
+    kafka{
+
+        bootstrap_servers => "10.140.0.10:9092,10.140.0.11:9092,10.140.0.12:9092"
+
+        topics => ["nginx-logs"]
+
+        codec => json
+
+    }
+
+}
+
+output{
+
+    elasticsearch {
+
+        hosts => ["10.16.3.165:9200"]
+
+         index => "logstash"
+#        index => "logstash-%{+YYYY.MM.dd}"
+
+    }
+
+}
+```
 
