@@ -609,18 +609,24 @@ input{
 
 }
 
-output{
 
-    elasticsearch {
+output {
+  elasticsearch {
+  
+    hosts => ["http://10.140.0.6:9200"]
+    
+     index => "nginx-logs"
+     
+#    index => "%{[@metadata][beat]}-%{[@metadata][version]}"
 
-        hosts => ["10.16.3.165:9200"]
-
-         index => "logstash"
-#        index => "logstash-%{+YYYY.MM.dd}"
-
-    }
-
+    user => "elastic"
+    
+    password => "P@ssw0rd@Data!"
+    
+  }
+  
 }
+
 ```
 
 
