@@ -505,7 +505,7 @@ bin/kafka-server-start.sh config/server-3.properties &
 
 ```text
 # 建立topic
-/usr/local/kafka/bin/kafka-topics.sh --create  --zookeeper 10.140.0.10:9092,10.140.0.11:9092,10.140.0.12:9092 --partitions 3 --replication-factor 3 --topic kafkatest
+/usr/local/kafka/bin/kafka-topics.sh --create --bootstrap-server 10.140.0.10:9092,10.140.0.11:9092,10.140.0.12:9092 --topic topicname test --partitions 3 --replication-factor 3
 ```
 
 ```text
