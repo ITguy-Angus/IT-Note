@@ -524,32 +524,6 @@ bin/kafka-topics.sh --describe --bootstrap-server 10.140.0.10:9092 --topic my-re
 修改配置：
 
 ```text
-filebeat.inputs:
-
-  - type: log
-  
-    paths:
-      
-  - /var/log/nginx/access.log
-          
-    tags: ["access"]
-      
-    scan_frequency: 5s
-      
- output.kafka:
-
-    enable: true
-
-    hosts: ["10.140.0.10:9092"]
-
-    topic: nginx-logs
-
-    compression: gzip
-
-max_message_bytes: 100000
-```
-
-```text
 filebeat.prospectors:
 - input.type: log	# 来源的类型
   enabled: true	  	# 表示这个input源启动
@@ -572,6 +546,33 @@ output.kafka:
 版权声明：本文为CSDN博主「习惯了想你」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
 原文链接：https://blog.csdn.net/Q748893892/article/details/101349888
 ```
+
+```text
+filebeat.inputs:
+  - input.type: log
+    enable: true
+    include_lines: ['content']
+    paths: /var/log/nginx/access.log
+    tail_files: true
+    fields:
+           topicname: nginx-logs
+    scan_frequency: 5s
+    
+#開啟debug模式
+logging.level: debug
+    logging.selectors: [publish]
+    logging.to_files: true
+    
+output.kafka:
+    enable: true
+    hosts: ["10.140.0.10:9092"]
+    topic: '%{[fields.topicname]}'
+    compression: gzip
+    max_message_bytes: 100000
+                                 
+```
+
+
 
 啟動filebeat:
 
