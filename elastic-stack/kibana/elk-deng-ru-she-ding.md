@@ -2,7 +2,7 @@
 description: ELK 登入設定
 ---
 
-# ELK 登入設定
+# Kibana 使用者登入套件設定
 
 ## ELK 登入設定
 
