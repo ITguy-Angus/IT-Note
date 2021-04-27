@@ -497,9 +497,9 @@ zookeeper.connect=10.140.0.10:2181,10.140.0.11:2181,10.140.0.12:2181
 分别指定不同配置文件，启动三个 Kafka 节点。启动后可以使用 jps 查看进程，此时应该有三个 zookeeper 进程和三个 kafka 进程。
 
 ```text
-bin/kafka-server-start.sh config/server-1.properties &
-bin/kafka-server-start.sh config/server-2.properties &
-bin/kafka-server-start.sh config/server-3.properties &
+nohup bin/kafka-server-start.sh config/server-1.properties &
+nohup bin/kafka-server-start.sh config/server-2.properties &
+nohup bin/kafka-server-start.sh config/server-3.properties &
 复制代码
 ```
 
@@ -525,7 +525,85 @@ bin/kafka-server-start.sh config/server-3.properties &
 /usr/local/kafka/bin/kafka-topics.sh --bootstrap-server 10.140.0.10:9092,10.140.0.11:9092,10.140.0.12:9092 --list
 ```
 
-### 
+### Kafka 狀態查詢方式
+
+
+
+zookeeper 是 kafka 的分散式協調系統，在 kafka 上多個節點間需要協調的內容，例如：彼此節點的ID，位置與當前狀態，或是跨節點 topic 的設定與狀態。取名叫做 zookeeper 就是在協調混亂的分散式系統，,裡面各種不同種類的服務都要協調，象個動物園管  
+理員。[Zookeeper 的官方文件](https://zookeeper.apache.org/doc/r3.3.3/zookeeperAdmin.html) 有更詳細的說明。
+
+Kafka 的節點資訊，與當前狀態，是放在 zookeeper 上，我們可以透過以下指令取得
+
+```text
+# 首先先取得 zkCli 的 cli，這個只有連進任何一台 zookeeper 內部都有
+kubectl exec -it kafka-0-zookeeper-0 --container kafka-broker bash
+
+# 由於是在 Pod 內部，直接 localhost 詢問本地
+/usr/bin/zkCli.sh -server localhost:2181
+
+Connecting to localhost:2181
+2019-09-25 15:02:36,089 [myid:] - INFO  [main:Environment@100] - Client environment:zookeeper.version=3.4.10-39d3a4f269333c922ed3db283be479f9deacaa0f, built on 03/23/2017 10:13 GMT
+2019-09-25 15:02:36,096 [myid:] - INFO  [main:Environment@100] - Client environment:host.name=kafka-0-zookeeper-0.kafka-0-zookeeper-headless.default.svc.cluster.local
+2019-09-25 15:02:36,096 [myid:] - INFO  [main:Environment@100] - Client environment:java.version=1.8.0_131
+2019-09-25 15:02:36,100 [myid:] - INFO  [main:Environment@100] - Client environment:java.vendor=Oracle Corporation
+2019-09-25 15:02:36,100 [myid:] - INFO  [main:Environment@100] - Client environment:java.home=/usr/lib/jvm/java-8-openjdk-amd64/jre
+2019-09-25 15:02:36,100 [myid:] - INFO  [main:Environment@100] - Client environment:java.class.path=/usr/bin/../build/classes:/usr/bin/../build/lib/*.jar:/usr/bin/../share/zookeeper/zookeeper-3.4.10.jar:/usr/bin/../share/zookeeper/slf4j-log4j12-1.6.1.jar:/usr/bin/../share/zookeeper/slf4j-api-1.6.1.jar:/usr/bin/../share/zookeeper/netty-3.10.5.Final.jar:/usr/bin/../share/zookeeper/log4j-1.2.16.jar:/usr/bin/../share/zookeeper/jline-0.9.94.jar:/usr/bin/../src/java/lib/*.jar:/usr/bin/../etc/zookeeper:
+2019-09-25 15:02:36,100 [myid:] - INFO  [main:Environment@100] - Client environment:java.library.path=/usr/java/packages/lib/amd64:/usr/lib/x86_64-linux-gnu/jni:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/usr/lib/jni:/lib:/usr/lib
+2019-09-25 15:02:36,100 [myid:] - INFO  [main:Environment@100] - Client environment:java.io.tmpdir=/tmp
+2019-09-25 15:02:36,100 [myid:] - INFO  [main:Environment@100] - Client environment:java.compiler=<NA>
+2019-09-25 15:02:36,101 [myid:] - INFO  [main:Environment@100] - Client environment:os.name=Linux
+2019-09-25 15:02:36,101 [myid:] - INFO  [main:Environment@100] - Client environment:os.arch=amd64
+2019-09-25 15:02:36,101 [myid:] - INFO  [main:Environment@100] - Client environment:os.version=4.14.127+
+2019-09-25 15:02:36,101 [myid:] - INFO  [main:Environment@100] - Client environment:user.name=zookeeper
+2019-09-25 15:02:36,102 [myid:] - INFO  [main:Environment@100] - Client environment:user.home=/home/zookeeper
+2019-09-25 15:02:36,102 [myid:] - INFO  [main:Environment@100] - Client environment:user.dir=/
+2019-09-25 15:02:36,105 [myid:] - INFO  [main:ZooKeeper@438] - Initiating client connection, connectString=localhost:2181 sessionTimeout=30000 watcher=org.apache.zookeeper.ZooKeeperMain$MyWatcher@42110406
+Welcome to ZooKeeper!
+2019-09-25 15:02:36,160 [myid:] - INFO  [main-SendThread(localhost:2181):ClientCnxn$SendThread@1032] - Opening socket connection to server localhost/127.0.0.1:2181. Will not attempt to authenticate using SASL (unknown error)
+JLine support is enabled
+2019-09-25 15:02:36,374 [myid:] - INFO  [main-SendThread(localhost:2181):ClientCnxn$SendThread@876] - Socket connection established to localhost/127.0.0.1:2181, initiating session
+2019-09-25 15:02:36,393 [myid:] - INFO  [main-SendThread(localhost:2181):ClientCnxn$SendThread@1299] - Session establishment complete on server localhost/127.0.0.1:2181, sessionid = 0x16d67baf1310001, negotiated timeout = 30000
+
+WATCHER::
+
+WatchedEvent state:SyncConnected type:None path:null
+[zk: localhost:2181(CONNECTED) 0]
+```
+
+取得 kafka broker 資料
+
+```text
+# List root Nodes
+$ ls /
+
+[cluster, controller, controller_epoch, brokers, zookeeper, admin, isr_change_notification, consumers, log_dir_event_notification, latest_producer_id_block, config]
+
+# Brokers 的資料節點
+$ ls /brokers
+[ids, topics, seqid]
+
+# List /brokers/ids 得到三個 kafka broker
+$ ls /brokers/ids
+[0, 1, 2]
+
+# 列出所有 topic 名稱
+ls /brokers/topics
+[ticker]
+```
+
+ticker 是上篇範利用到的 topic
+
+簡單來說，zookeeper 存放這些狀態與 topic 的 metadata
+
+* 儲存核心的狀態與資料，特別是 broker 萬一掛掉，也還需要維持的資料
+* 協調工作，例如協助 broker 處理 quorum，紀錄 partition master 等
+
+```text
+# 離開 zkCli
+quit
+```
+
+
 
 ### 
 
