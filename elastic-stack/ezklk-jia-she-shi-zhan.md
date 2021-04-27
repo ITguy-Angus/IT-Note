@@ -512,7 +512,7 @@ bin/kafka-server-start.sh config/server-3.properties &
 
 ```text
 # 獲取toppid
-/usr/local/kafka/bin/kafka-topics.sh --describe --bootstrap-server 10.140.0.10:9092 --topic my-replicated-topic
+/usr/local/kafka/bin/kafka-topics.sh --describe --bootstrap-server 10.140.0.10:9092,10.140.0.11:9092,10.140.0.12:9092 --topic my-replicated-topic
 ```
 
 ```text
@@ -633,13 +633,55 @@ output {
 
 ## 坑!!!!
 
-### filebeat Topic進入kafka 後只有 1個partition 1ReplicationFactor
+### Q.filebeat Topic進入kafka 後只有 1個partition 1ReplicationFactor
 
-1.嘗試是否可以消費
+#### kafka自动创建主题时指定分区数
 
-`bin/kafka-console-consumer.sh --bootstrap-server 10.140.0.10:2181 --topic logstash-nginx --from-beginning`                                                                   
+可以通过修改kafka broker的server.properties配置文件的auto.create.topics.enable来开启主题自动创建功能，如果相关闭主题自动创建功能，设置auto.create.topics.enable=false即可，自动创建主题默认创建一个分区，为了提高kafka吞吐量，我们可以根据实际需要通过修改num.partitions这个配置来调整默认创建主题的分区数
+
+num.partitions=50 就意味着默认为每个自动创建主题创建50个分区 
+
+```text
+############################ Topic setting ###########################################
+
+auto.create.topics.enable = true
+num.partitions=3
+default.replication.factor=3
+```
+
+
+
+[https://github.com/alibaba/canal/issues/1982](https://github.com/alibaba/canal/issues/1982)
+
+{% embed url="https://blog.csdn.net/john1337/article/details/106914959" %}
+
+`手動建立分區`
+
+cd /usr/local/kafka/bin
+
+touch topic-reassign.json
+
+vim touch topic-reassign.json
+
+```text
+{"version":1,"topics":[{"topic":"topic_replica_test"}]}
+```
+
+`./kafka-reassign-partitions.sh --bootstrap-server 10.140.0.10:2181,10.140.0.11:2181,10.140.0.11:2181 --generate --topics-to-move-json-file topic-reassign.json --broker-list 1,2,3`
+
+kafka-reassign-partitions --zookeeper 10.140.0.12:2181 --generate --topics-to-move-json-file topic-reassign.json --broker-list 1,2,3
+
+[https://blog.csdn.net/lzufeng/article/details/81743521](https://blog.csdn.net/lzufeng/article/details/81743521)
+
+分區重新分配 [https://blog.csdn.net/data2tech/article/details/108719342](https://blog.csdn.net/data2tech/article/details/108719342)
+
+增加\(或减少\)Kafka topic的副本数   [https://blog.csdn.net/data2tech/article/details/108730452](https://blog.csdn.net/data2tech/article/details/108730452)
+
+
+
+
 
 ### F&gt;K&gt;L&gt;E&gt;K 無法看到index 在kibana上面
 
-
+[https://blog.51cto.com/tryingstuff/2052271](https://blog.51cto.com/tryingstuff/2052271)
 
