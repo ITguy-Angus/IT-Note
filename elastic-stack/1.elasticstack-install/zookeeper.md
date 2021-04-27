@@ -15,7 +15,7 @@ Zookeeper 是一個開源的分布式的，為分布式應用提供協調服務�
 
 Zookeeper 是以觀察者角度來設計的分布式服務管理框架，負責存儲和數據，接受觀察著的註冊。
 
-![](../.gitbook/assets/tu-pian-%20%282%29.png)
+![](../../.gitbook/assets/tu-pian-%20%282%29.png)
 
 
 
@@ -23,7 +23,7 @@ Zookeeper 是以觀察者角度來設計的分布式服務管理框架，負責�
 
 * 因需有半數節點以上存活才能正常運作固一般最少使用三台或是以上的奇數台
 
-![](../.gitbook/assets/tu-pian-%20%284%29.png)
+![](../../.gitbook/assets/tu-pian-%20%284%29.png)
 
 
 
