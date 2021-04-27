@@ -733,7 +733,7 @@ default.replication.factor=3
 
 {% embed url="https://blog.csdn.net/john1337/article/details/106914959" %}
 
-`手動建立分區`
+#### 手動建立分區
 
 cd /usr/local/kafka/bin
 
@@ -761,5 +761,5 @@ kafka-reassign-partitions --zookeeper 10.140.0.12:2181 --generate --topics-to-mo
 
 ### F&gt;K&gt;L&gt;E&gt;K 無法看到index 在kibana上面
 
-[https://blog.51cto.com/tryingstuff/2052271](https://blog.51cto.com/tryingstuff/2052271)
+這個問題跟上面的問題有關西 如果Topic 只設定一個 1個partition 、1ReplicationFactor 則logstash 必須設定接受那一Broker 的topic 才行
 
