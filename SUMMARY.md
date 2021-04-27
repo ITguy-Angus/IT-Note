@@ -6,8 +6,8 @@
 
 * [EZKLK 架設實戰](elastic-stack/ezklk-jia-she-shi-zhan.md)
 * [Elastic Stack 介紹與安裝](elastic-stack/1.elasticstack-install/README.md)
+  * [常用架構設計](elastic-stack/1.elasticstack-install/chang-yong-jia-gou-she-ji.md)
   * [應用連結](elastic-stack/1.elasticstack-install/ying-yong-lian-jie.md)
-  * [Zookeeper](elastic-stack/1.elasticstack-install/zookeeper.md)
   * [ELK Stack tar安裝方式](elastic-stack/1.elasticstack-install/elk-stack-tar-an-zhuang-fang-shi.md)
   * [ELK Stack apt 安裝方式](elastic-stack/1.elasticstack-install/apt-install.md)
 * [Kibana](elastic-stack/kibana/README.md)
@@ -18,6 +18,7 @@
 * [Beats](elastic-stack/beats/README.md)
   * [Nginx](elastic-stack/beats/1-1-nginx.md)
 * [Zookeeper&Kafka](elastic-stack/zookeeper-and-kafka/README.md)
+  * [Zookeeper](elastic-stack/zookeeper-and-kafka/zookeeper.md)
   * [如何彻底删除Kafka中的topic \(marked for deletion\)](elastic-stack/zookeeper-and-kafka/ru-he-che-di-shan-chu-kafka-zhong-de-topic-marked-for-deletion.md)
   * [Kafka & Zookeeper 介紹與安裝](elastic-stack/zookeeper-and-kafka/kafka-an-zhuang-yu-gao-ke-yong-she-ding/README.md)
     * [ELK+FileBeat+Kafka分散式系統搭建圖文教程](elastic-stack/zookeeper-and-kafka/kafka-an-zhuang-yu-gao-ke-yong-she-ding/elk+filebeat+kafka-fen-san-shi-xi-tong-da-jian-tu-wen-jiao-cheng.md)
