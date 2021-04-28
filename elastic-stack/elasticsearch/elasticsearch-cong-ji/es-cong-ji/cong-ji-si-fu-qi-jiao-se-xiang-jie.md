@@ -56,9 +56,9 @@ cluster.initial_master_nodes: ["master1"]  #初始化選舉的master節點
 * 當磁碟容量無法滿足需求時或者磁碟讀寫壓力大時，可以增加資料節點。
 * 讀寫分離：配置LB負載均衡寫請求到Ingest節點，讀請求到Coordinating節點。
 
-  ![](https://chengzw258.oss-cn-beijing.aliyuncs.com/Elasticsearch/20210224160617.png)
-
 * Kibana部署在每臺Coordinating上，同樣使用LB做流量分發。
+
+![](https://chengzw258.oss-cn-beijing.aliyuncs.com/Elasticsearch/20210224160617.png)
 
 ### Hot & Warm 架構
 
