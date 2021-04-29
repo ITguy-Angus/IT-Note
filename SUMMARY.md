@@ -19,7 +19,7 @@
     * [叢集介紹](elastic-stack/elasticsearch/elasticsearch-cong-ji/es-cong-ji.md)
     * [叢集伺服器腳色詳解](elastic-stack/elasticsearch/elasticsearch-cong-ji/cong-ji-si-fu-qi-jiao-se-xiang-jie.md)
     * [叢集佈署](elastic-stack/elasticsearch/elasticsearch-cong-ji/elasticsearch-ji-qun-da-jian/README.md)
-      * [7.12.0 ES集群架設實戰](elastic-stack/elasticsearch/elasticsearch-cong-ji/elasticsearch-ji-qun-da-jian/7.12.0-es-ji-qun-jia-she-shi-zhan.md)
+      * [7.12.0 集群架設實戰](elastic-stack/elasticsearch/elasticsearch-cong-ji/elasticsearch-ji-qun-da-jian/7.12.0-es-ji-qun-jia-she-shi-zhan.md)
       * [7.8.1版本搭建](elastic-stack/elasticsearch/elasticsearch-cong-ji/elasticsearch-ji-qun-da-jian/7.8.1-ban-ben-da-jian.md)
 * [Logstash](elastic-stack/logstash/README.md)
   * [Logstash 叢集](elastic-stack/logstash/untitled/README.md)
