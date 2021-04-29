@@ -1,4 +1,4 @@
-# Elasticsearch 叢集搭建
+# 叢集佈署
 
 Elasticsearch 集群搭建
 
