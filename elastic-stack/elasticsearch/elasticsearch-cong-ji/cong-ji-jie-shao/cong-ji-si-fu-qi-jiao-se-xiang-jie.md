@@ -1,7 +1,5 @@
 # 叢集伺服器腳色詳解
 
-
-
 ### 角色規劃
 
 一個節點在預設情況會下同時扮演:master eligible，data node 和 ingest node。
