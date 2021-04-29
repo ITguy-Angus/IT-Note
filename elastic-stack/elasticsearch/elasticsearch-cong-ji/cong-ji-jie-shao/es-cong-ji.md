@@ -1,4 +1,4 @@
-# Elasticsearch 叢集介紹
+# 叢集介紹
 
 ## 三、ES的叢集架構
 
