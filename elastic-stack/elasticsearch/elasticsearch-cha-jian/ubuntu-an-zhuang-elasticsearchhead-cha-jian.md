@@ -5,49 +5,36 @@
 1.elasticsearch-head插件介绍：  
 elasticsearch-head是一个界面化的集群操作和管理工具，可以对集群进行傻瓜式操作。你可以通过插件把它集成到elasticsearch（5.0版本后不支持此方式）,由于我ES使用的是6.X版本，所以我把es-head安装成一个独立webapp,它依赖Node.js库，使用Grunt工具构建，所以需要先安装Node.js和Grunt。
 
+
+
 2.安装node.js
 
-\(0\)先检查是否已经安装了node.js 和npm,如果有跳过这一步
+開啟 Terminal 輸入下方指令安裝 Node.js
 
 ```text
-$ node -v #验证node.js是否已经安装，如果能查看到版本号说明已经安装
-$ npm -v #验证npm工具是否已经安装，如果能查看到版本号说明已经安装
+sudo apt-get install -y nodejs
 ```
 
-\(1\)下载node.js
+安裝完成後可以確認一下 Node.js 版本，並檢查是否成功安裝。
 
 ```text
-$ sudo su
-$ cd /usr/elasticsearch/
-$ wget https://nodejs.org/dist/v6.9.2/node-v6.9.2-linux-x64.tar.xz
+node -v
 ```
 
-\(2\)解压文件：
+#### 安裝 NPM <a id="&#x5B89;&#x88DD;-npm"></a>
+
+npm 全名為 Node Package Manager，是 Node.js 的套件（package）管理工具，npm 可以讓 Node.js 的開發者，直接利用、擴充線上的第三方套件庫（packages registry），加速軟體專案的開發。
+
+開啟 Terminal 輸入下方指令安裝 NPM
 
 ```text
-$ xz -d node-v6.9.2-linux-x64.tar.xz #解压出来是tar，需要继续解压
-$ tar –xvf node-v6.9.2-linux-x64.tar 
-$ mv node-v6.9.2-linux-x64 /usr/local/node //移到node目录
+sudo apt-get install npm
 ```
 
-\(3\)配置环境变量
+安裝完成後可以確認一下 NPM 版本，並檢查是否成功安裝。
 
 ```text
-$ vi /etc/profile #打开配置文件
-```
-
-在配置文件中添加：
-
-```text
-NODE_HOME=/usr/local/node #添加node_home变量
-PATH= $PATH:$JAVA_HOME/bin:$NODE_HOME/bin #把node_home变量添加到环境变量中
-export PATH
-```
-
-\(4\)重新加载配置文件
-
-```text
-$ source /etc/profile #重新加载环境变量配置文件
+npm -v
 ```
 
   
