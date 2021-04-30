@@ -43,7 +43,7 @@ npm -v
 
 ```text
 $ wget https://codeload.github.com/mobz/elasticsearch-head/zip/master 
-$ unzip elasticsearch-head-master.zip
+$ unzip emaster.zip
 $ mv elasticsearch-head-master /usr/elasticsearch/
 ```
 
