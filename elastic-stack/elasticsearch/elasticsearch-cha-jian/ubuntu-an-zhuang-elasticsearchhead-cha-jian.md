@@ -53,13 +53,15 @@ $ rm master.zip
 进入es-head,执行npm,使用taobao镜像
 
 ```text
-$ npm install -g grunt --registry=https://registry.npm.taobao.org #安装grunt工具
+# 安装grunt工具
+$ npm install -g grunt --registry=https://registry.npm.taobao.org
 ```
 
 编译elasticsearch-head源码
 
 ```text
-$ npm install -g cnpm --registry=https://registry.npm.taobao.org #安装cnpm
+#安装cnpm
+$ npm install -g cnpm --registry=https://registry.npm.taobao.org
 $ cnpm install #使用cnpm代替npm编译es-head源码
 ```
 
@@ -94,14 +96,14 @@ $ locate elasticsearch.yml #查看配置文件所在位置
 ![](../../../.gitbook/assets/tu-pian-%20%2818%29.png)
 
 ```text
-$ vim /etc/elasticsearch/elasticsearch.yml
+$ vim /usr/local/elasticsearch/config/elasticsearch.yml
 ```
 
 在最后加上两行：
 
 ```text
 http.cors.enabled: true
-http.cors.allow-origin: “*”
+http.cors.allow-origin: "*"
 ```
 
 保存后重启es。
