@@ -78,17 +78,14 @@ sudo ufw status numbered #以數字排列目前防火牆規則
 
 ### Kibana 安裝
 
-`cd /usr/local`
-
-`curl -L -O https://artifacts.elastic.co/downloads/kibana/kibana-7.12.0-linux-x86_64.tar.gz`
-
-`tar -xvf kibana-7.12.0-linux-x86_64.tar.gz`
-
-`rm kibana-7.12.0-linux-x86_64.tar.gz`
-
-`mv kibana-7.12.0-linux-x86_64/ kibana`
-
-`ln -s /usr/local/kibana kibana`
+```text
+cd /usr/local
+curl -L -O https://artifacts.elastic.co/downloads/kibana/kibana-7.12.0-linux-x86_64.tar.gz
+tar -xvf kibana-7.12.0-linux-x86_64.tar.gz
+rm kibana-7.12.0-linux-x86_64.tar.gz
+mv kibana-7.12.0-linux-x86_64/ kibana
+ln -s /usr/local/kibana kibana
+```
 
 * 設定檔設定
 
@@ -96,7 +93,7 @@ sudo ufw status numbered #以數字排列目前防火牆規則
 
 ```text
 server.port: 5601
-server.host: "123.456.789.0"
+server.host: "hostname"
 server.name: "kibana-test"
 elasticsearch.hosts: ["http://10.10.0.8:9200"]
 # kibana会将部分数据写入es，这个是ex中索引的名字

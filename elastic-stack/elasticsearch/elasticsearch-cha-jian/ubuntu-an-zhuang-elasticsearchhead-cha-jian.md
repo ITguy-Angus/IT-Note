@@ -42,9 +42,11 @@ npm -v
 下载地址：https://github.com/mobz/elasticsearch-head 把源码elasticsearch-head-master.zip下载下来，然后上传到/usr/elasticsearch/下。解压。\(of course 直接git clone也OK \)
 
 ```text
+$ cd /usr/local/elasticsearch/
 $ wget https://codeload.github.com/mobz/elasticsearch-head/zip/master 
-$ unzip emaster.zip
-$ mv elasticsearch-head-master /usr/elasticsearch/
+$ mv master master.zip
+$ unzip master.zip
+$ rm master.zip
 ```
 
 安装grunt工具  
@@ -112,7 +114,7 @@ $ sudo /etc/init.d/elasticsearch restart
 
 ```text
 $ cd elasticsearch-head-master
-$ grunt server
+$ nohup grunt server &
 ```
 
 如果能打印以下的信息，那就说明head插件安装并运行成功，我们可以通过http://ip:9100访问管理页面。
