@@ -4,7 +4,7 @@
 
 ## Elastic Stack
 
-* [EZKLK 架設實戰](elastic-stack/ezklk-jia-she-shi-zhan.md)
+* [BZKLEK 架設實戰](elastic-stack/ezklk-jia-she-shi-zhan.md)
 * [Elastic Stack 介紹與安裝](elastic-stack/1.elasticstack-install/README.md)
   * [常用架構設計](elastic-stack/1.elasticstack-install/chang-yong-jia-gou-she-ji.md)
   * [ELK Stack tar安裝方式](elastic-stack/1.elasticstack-install/elk-stack-tar-an-zhuang-fang-shi.md)
@@ -33,6 +33,7 @@
   * [Filebeat](elastic-stack/beats/filebeat/README.md)
     * [Nginx](elastic-stack/beats/filebeat/1-1-nginx.md)
 * [Zookeeper&Kafka](elastic-stack/zookeeper-and-kafka/README.md)
+  * [Kafka CMAK \(網頁管理工具\)](elastic-stack/zookeeper-and-kafka/kafka-cmak-wang-ye-guan-li-gong-ju.md)
   * [Kafka & Zookeeper 介紹與安裝](elastic-stack/zookeeper-and-kafka/kafka-an-zhuang-yu-gao-ke-yong-she-ding/README.md)
     * [ELK+FileBeat+Kafka分散式系統搭建圖文教程](elastic-stack/zookeeper-and-kafka/kafka-an-zhuang-yu-gao-ke-yong-she-ding/elk+filebeat+kafka-fen-san-shi-xi-tong-da-jian-tu-wen-jiao-cheng.md)
     * [基于 ZooKeeper 搭建 Kafka 高可用集群](elastic-stack/zookeeper-and-kafka/kafka-an-zhuang-yu-gao-ke-yong-she-ding/ji-yu-zookeeper-da-jian-kafka-gao-ke-yong-ji-qun.md)

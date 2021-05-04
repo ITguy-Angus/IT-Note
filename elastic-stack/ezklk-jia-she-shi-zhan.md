@@ -1,4 +1,4 @@
-# EZKLK 架設實戰
+# BZKLEK 架設實戰
 
 ## ELK Stack 7.12 解壓安裝
 
