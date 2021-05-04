@@ -26,18 +26,20 @@ $ wget https://github.com/yahoo/CMAK/releases/download/3.0.0.5/cmak-3.0.0.5.zip
 解压安装包，并进入解压后的目录。
 
 ```text
-$ unzip cmak-3.0.0.5.zip$ cd cmak-3.0.0.5 
+$ unzip cmak-3.0.0.5.zip
+$ mv cmak-3.0.0.5 cmak
+$ cd cmak
 ```
 
 修改配置文件application.conf
 
 ```text
-$ vim cmak-3.0.0.5/conf/application.conf 
+$ vim conf/application.conf 
 
 #用上面的命令编辑打开文件，将下面的两个配置项配置成你实际的kafka集群对应的zookeeper地址。
 
-kafka-manager.zkhosts="kafka-manager-zookeeper:2181" 
-cmak.zkhosts="kafka-manager-zookeeper:2181" 
+kafka-manager.zkhosts="10.140.0.10:2181,10.140.0.11:2181,10.140.0.12:2181" 
+cmak.zkhosts="10.140.0.10:2181,10.140.0.11:2181,10.140.0.12:2181"  
 ```
 
 ### 啟動服務
