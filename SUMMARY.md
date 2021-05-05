@@ -13,6 +13,8 @@
 * [Kibana](elastic-stack/kibana/README.md)
   * [Kibana 使用者登入套件設定](elastic-stack/kibana/elk-deng-ru-she-ding.md)
 * [Elasticsearch](elastic-stack/elasticsearch/README.md)
+  * [Elasticsearch 設定檔大權](elastic-stack/elasticsearch/elasticsearch-she-ding-dang-da-quan/README.md)
+    * [Elasticsearch.yml](elastic-stack/elasticsearch/elasticsearch-she-ding-dang-da-quan/elasticsearch.yml.md)
   * [Elasticserch 介紹](elastic-stack/elasticsearch/elasticserch-jie-shao/README.md)
     * [从原理到应用，Elasticsearch详解](elastic-stack/elasticsearch/elasticserch-jie-shao/cong-yuan-li-dao-ying-yong-elasticsearch-xiang-jie.md)
   * [Elasticsearch 叢集](elastic-stack/elasticsearch/elasticsearch-cong-ji/README.md)
