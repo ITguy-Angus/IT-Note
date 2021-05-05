@@ -114,6 +114,8 @@ $ sudo /etc/init.d/elasticsearch restart
 
 进入_elasticsearch-head-master_下，运行grunt server
 
+## 啟動服務
+
 ```text
 $ cd elasticsearch-head-master
 $ nohup grunt server &
