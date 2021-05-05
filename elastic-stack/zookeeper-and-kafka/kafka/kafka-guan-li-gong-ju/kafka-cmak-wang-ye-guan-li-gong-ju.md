@@ -47,7 +47,7 @@ cmak.zkhosts="10.140.0.10:2181,10.140.0.11:2181,10.140.0.12:2181"
 
 ```text
 $ cd /usr/local/cmak
-$ nohup JMX_PORT=9997 bin/cmak -Dconfig.file=conf/application.conf -Dhttp.port=9001 &
+$ nohup bin/cmak -Dconfig.file=conf/application.conf -Dhttp.port=9001 &
 ```
 
 ## WEB 設定
@@ -97,10 +97,10 @@ Yikes! KeeperErrorCode = Unimplemented for /kafka-manager/mutex Try again.
 
 諾CMAK 是獨立架設私服器需要設定如下
 
-1.啟動服務需要設定JMX\_PORT 、 諾CMAK 服務器為獨立Server
+1.啟動Kafka服務需要設定JMX\_PORT 、 諾CMAK 服務器為獨立Server
 
 ```text
-$ nohup JMX_PORT=9997 bin/cmak -Dconfig.file=conf/application.conf -Dhttp.port=9001 &
+$ nohup JMX_PORT=9997 bin/kafka-server-start.sh config/server-1.properties &
 ```
 
 
