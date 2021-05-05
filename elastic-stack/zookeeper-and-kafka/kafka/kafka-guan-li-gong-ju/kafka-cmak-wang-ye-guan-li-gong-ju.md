@@ -47,7 +47,7 @@ cmak.zkhosts="10.140.0.10:2181,10.140.0.11:2181,10.140.0.12:2181"
 
 ```text
 $ cd /usr/local/cmak
-$ nohup bin/cmak -Dconfig.file=conf/application.conf -Dhttp.port=9001 &
+$ nohup JMX_PORT=9997 bin/cmak -Dconfig.file=conf/application.conf -Dhttp.port=9001 &
 ```
 
 ## WEB 設定
@@ -88,4 +88,20 @@ Yikes! KeeperErrorCode = Unimplemented for /kafka-manager/mutex Try again.
 通过这个管理工具，我们可以进行Topic\(主题\)、分区等操作，不再需要通过命令行去调用Kafka集群获取信息，提高我们的效率。
 
 补充一句：我之前一直用的是kafka-manager/archive/1.3.3.23.tar.gz的压缩包，新版本部署后效果是一样的。如果你所部署的kafka集群不支持最新CMAK的要求，可以下载1.3.3.23.tar.gz版本试试。
+
+
+
+
+
+坑
+
+諾CMAK 是獨立架設私服器需要設定如下
+
+1.啟動服務需要設定JMX\_PORT 、 諾CMAK 服務器為獨立Server
+
+```text
+$ nohup JMX_PORT=9997 bin/cmak -Dconfig.file=conf/application.conf -Dhttp.port=9001 &
+```
+
+
 
