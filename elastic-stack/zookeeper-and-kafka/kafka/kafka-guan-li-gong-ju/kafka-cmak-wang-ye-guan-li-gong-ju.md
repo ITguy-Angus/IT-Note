@@ -28,6 +28,8 @@ $ wget https://github.com/yahoo/CMAK/releases/download/3.0.0.5/cmak-3.0.0.5.zip
 ```text
 $ unzip cmak-3.0.0.5.zip
 $ mv cmak-3.0.0.5 cmak
+$ rm  cmak-3.0.0.5.zip
+
 $ cd cmak
 ```
 
