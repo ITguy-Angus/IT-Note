@@ -709,6 +709,19 @@ output {
 
 ```
 
+## 啟動命令
+
+```text
+#kafka
+nohup JMX_PORT=9997 bin/kafka-server-start.sh config/server-1.properties &
+#Elasticsearch-head
+nohup grunt server &
+#CMAK
+nohup bin/cmak -Dconfig.file=conf/application.conf -Dhttp.port=9001 &
+```
+
+​
+
 ## 坑!!!!
 
 ### Q.filebeat Topic進入kafka 後只有 1個partition 1ReplicationFactor
