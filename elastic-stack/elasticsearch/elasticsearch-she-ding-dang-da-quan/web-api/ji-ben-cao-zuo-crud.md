@@ -399,7 +399,7 @@ PUT _index_template/template_1
       },
       "properties": {
         "host_name": {
-          "type": "keyword"
+          "type": "test"
         },
         "created_at": {
           "type": "date",
