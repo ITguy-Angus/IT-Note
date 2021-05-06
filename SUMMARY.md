@@ -17,7 +17,7 @@
     * [从原理到应用，Elasticsearch详解](elastic-stack/elasticsearch/elasticserch-jie-shao/cong-yuan-li-dao-ying-yong-elasticsearch-xiang-jie.md)
   * [Elasticsearch 設定大權](elastic-stack/elasticsearch/elasticsearch-she-ding-dang-da-quan/README.md)
     * [WEB API](elastic-stack/elasticsearch/elasticsearch-she-ding-dang-da-quan/web-api/README.md)
-      * [基本操作 CRUD](elastic-stack/elasticsearch/elasticsearch-she-ding-dang-da-quan/web-api/ji-ben-cao-zuo-crud.md)
+      * [基本操作](elastic-stack/elasticsearch/elasticsearch-she-ding-dang-da-quan/web-api/ji-ben-cao-zuo-crud.md)
     * [Elasticsearch.yml](elastic-stack/elasticsearch/elasticsearch-she-ding-dang-da-quan/elasticsearch.yml.md)
   * [Elasticsearch 叢集](elastic-stack/elasticsearch/elasticsearch-cong-ji/README.md)
     * [叢集介紹](elastic-stack/elasticsearch/elasticsearch-cong-ji/es-cong-ji.md)

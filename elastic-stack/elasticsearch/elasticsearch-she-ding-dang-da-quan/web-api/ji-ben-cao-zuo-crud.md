@@ -1,13 +1,63 @@
-# 基本操作 CRUD
+# 基本操作
 
- 15 Jul 2020
+## Elasticsearch模組功能之-索引分片分配（Index shard allocation）
 
-## Elasticsearch 教學 - API 操作
+### 1、分片分配
+
+           包含或者排除filters可以來控制基於節點的索引分配。filters可以在索引級別和叢集級別進行設定。如下使用叢集級別舉例：
+
+           設定有4個節點，每個的節點指定一個屬性tag（可以隨意修改），並賦予特定值，比如節點1設定為node.tag:value1,節點二設定為node.tag:value2等等。建立索引時將index.routing.allocation.include.tag屬性設定為value1和value2後，我們將會建立一個只部署在節點1和節點2的索引。命令如下：
+
+```text
+curl -XPUT localhost:9200/test/_settings -d '{
+    "index.routing.allocation.include.tag" : "value1,value2"
+}'
+```
+
+             如果不想將索引新增到上述兩個節點上，可以使用index.routing.allocation.exclude.tag屬性。如下：
+
+```text
+curl -XPUT localhost:9200/test/_settings -d '{
+    "index.routing.allocation.exclude.tag" : "value1,value2"
+}'
+```
+
+             index.routing.allocation.require.\*用於指定幾個規則，滿足這些規則則會被分配到該節點上。
+
+include,exclude和require的值也支援簡單的萬用字元，比如value1\*，另外，\_ip,\_name,\_id和\_host這些屬於特定的屬性名稱，他們分別匹配節點的IP地址，名稱，ID和主機名。以上的索引配置可以使用API進行實時的更新。
+
+### 2、節點分片總數
+
+           `index.routing.allocation.total_shards_per_node`設定可以控制es節點上每個索引最大能分配的分片個數。該配置可以使用API進行動態更新。
+
+### 3、基於磁碟的分片分配
+
+                   （該配置在es1.3.0後才有效）
+
+           Elasticsearch可以根據節點磁碟的使用情況來配置分片分配。該配置預設開啟你，可以下面命令進行禁用：
+
+```text
+curl -XPUT localhost:9200/_cluster/settings -d '{
+    "transient" : {
+        "cluster.routing.allocation.disk.threshold_enabled" : false
+    }
+}'
+```
+
+  Elasticsearch使用兩個配置引數決定分片是否能存放到某個節點上。
+
+cluster.routing.allocation.disk.watermark.low：控制磁碟使用的低水位。預設為85%，意味著如果節點磁碟使用超過85%，則ES不允許在分配新的分片。當配置具體的大小如100MB時，表示如果磁碟空間小於100MB不允許分配分片。
+
+cluster.routing.allocation.disk.watermark.high：控制磁碟使用的高水位。預設為90%，意味著如果磁碟空間使用高於90%時，ES將嘗試分配分片到其他節點。
+
+         上述兩個配置可以使用API動態更新，ES每隔30s獲取一次磁碟的使用資訊，該值可以通過cluster.info.update.interval來設定。Elasticsearch 教學 - API 操作
 
 以下內容包含基本的 CRUD 操作，Elasticsearch 提供良好的 REST API 呼叫介面  
  另外還有一些系統配置與進階功能，看到 Alias 功能覺得十分有趣，讓維運有更多的彈性跟方法去調整資料儲存與硬體架構
 
-### 基本操作 CRUD <a id="&#x57FA;&#x672C;&#x64CD;&#x4F5C;-crud"></a>
+
+
+## 基本操作 CRUD
 
 #### 常見的回傳值 <a id="&#x5E38;&#x898B;&#x7684;&#x56DE;&#x50B3;&#x503C;"></a>
 
@@ -418,4 +468,10 @@ $ curl -X DELETE http://localhost:9200/amazon/_alias/bookstore
 ### 總結 <a id="&#x7E3D;&#x7D50;"></a>
 
 礙於篇幅，其他還有處理自然語言 / 地理位置資料 / 實際上線的注意事項等等進階議題，只能等之後真的有用上再來分享
+
+
+
+
+
+
 
