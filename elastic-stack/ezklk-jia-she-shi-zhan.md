@@ -153,6 +153,52 @@ kibana.index: ".kibana"
 
 `su logstash`
 
+```text
+#編輯設定檔案
+vim /usr/local/logstash.conf
+```
+
+```text
+#內容請複製貼上
+# Sample Logstash configuration for creating a simple
+# Beats -> Logstash -> Elasticsearch pipeline.
+
+input{
+
+    kafka{
+
+        bootstrap_servers => "10.140.0.10:9092,10.140.0.11:9092,10.140.0.12:9092"
+
+        topics => ["nginx-logs"]
+
+        codec => json
+
+    }
+
+}
+
+
+output {
+
+  elasticsearch {
+
+        hosts => ["http://10.140.0.6:9200"]
+
+        index => "nginx-logs"
+
+       #index => "%{[@metadata][beat]}-%{[@metadata][version]}"
+
+#       user => "elastic"
+
+#       password => "P@ssw0rd@Data!"
+
+  }
+
+}
+
+
+```
+
 * 进入启动目录启动 /usr/local/logstash/bin 使用后台启动方式
 
 `nohup bin/logstash -f config/logstash.conf &`
