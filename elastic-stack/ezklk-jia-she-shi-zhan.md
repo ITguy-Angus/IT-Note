@@ -238,48 +238,54 @@ n], :non_running_pipelines=>[]}
 
 `su filebeat`
 
-* Config
+* Config 設定config
 
 ```text
-#複製貼上下面內容 (localhost改成自己的IP)
-name: localhost
-output:
-  logstash:
-    enabled: true
-    hosts:
-      - localhost:5044
-    index: "localhost"filebeat.inputs:
-    - type: log
-      paths:
-        - /usr/local/nginx/logs/access.log
-      tags: ["access"]
-#開啟debug模式
-logging.level: debug
-logging.selectors: [publish]
-logging.to_files: true
-logging.files:
-    path: /var/log/filebeat
-    name: filebeat-localhost
+vim /usr/local/filebeat/nginx.yml
 ```
 
+內容:
+
 ```text
-#複製貼上下面內容 (localhost改成自己的IP)
-name: 10.140.0.8
-output.logstash:
-    hosts:  ["10.140.0.7:5044"]
-    index: "Nginx"
-filebeat.inputs:
-    - type: log
-      paths:
-        - /var/log/nginx/access.log
-      tags: ["access"]
-#開啟debug模式
-logging.level: debug
-logging.selectors: [publish]
-logging.to_files: true
-logging.files:
-    path: /var/log/filebeat
-    name: filebeat-localhost
+    #    include_lines: ['content']
+
+    paths: /var/log/nginx/access.log
+
+    tail_files: true
+
+    fields:
+           topicname: nginx-logs
+
+    scan_frequency: 5s
+
+    #開啟debug模式
+
+    #logging.level: debug
+
+    #logging.selectors: [publish]
+
+    #logging.to_files: true
+
+output.kafka:
+
+  enabled: true
+
+  hosts: ["10.140.0.10:9092","10.140.0.11:9092","10.140.0.12:9092"]
+
+  topic: "nginx-logs"
+
+  partition.hash:
+
+  reachable_only: true
+
+  compression: gzip
+
+  max_message_bytes: 1000000
+
+  required_acks: 1
+
+  logging.to_files: true
+
 ```
 
 * 进入启动目录启动 /usr/local/logstash/bin 使用后台启动方式注意後面可以帶入不同設定檔檔名

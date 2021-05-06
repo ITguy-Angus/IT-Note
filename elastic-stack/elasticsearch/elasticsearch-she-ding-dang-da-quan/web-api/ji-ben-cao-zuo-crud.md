@@ -338,10 +338,10 @@ PUT _component_template/other_component_template
 // Index template，只要 Index 開頭是 bar 就會套用
 PUT _index_template/template_1
 {
-  "index_patterns": ["bar*"],
+  "index_patterns": ["*"],
   "template": {
     "settings": {
-      "number_of_shards": 1
+      "number_of_shards": 3
     },
     "mappings": {
       "_source": {
