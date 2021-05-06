@@ -1,2 +1,2 @@
-# Elasticsearch 設定檔大權
+# Elasticsearch 設定大權
 
