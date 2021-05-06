@@ -103,16 +103,19 @@ Yikes! KeeperErrorCode = Unimplemented for /kafka-manager/mutex Try again.
 $ nohup JMX_PORT=9997 bin/kafka-server-start.sh config/server-1.properties &
 ```
 
-2.修改kafka-run-class.sh脚本，第一行增加JMX\_PORT=9988即可。
-
-事实上这两种配置方式背后的原理是一样的，我们看一下kafka的启动脚本kafka-server-start.sh的最后一行exec $base\_dir/kafka-run-class.sh $EXTRA\_ARGS kafka.Kafka "$@"，实际上就是调用kafka-run-class.sh脚本，其中有一段这样的内容：
-
-
+2.**修改kafka-run-class.sh脚本，第一行增加JMX\_PORT=9988即可。**
 
 ```text
-# JMX port to use
-if [  $JMX_PORT ]; then
-  KAFKA_JMX_OPTS="$KAFKA_JMX_OPTS -Dcom.sun.management.jmxremote.port=$JMX_PORT "
-fi
+#編輯檔案
+vim /usr/local/kafka/bin/kafka-run-class.sh
+#在檔案第一行中增加
+JMX_PORT=9988
+```
+
+3.所以，本质是给参数JMX\_PORT赋值，第二种方式在脚本的第一行增加JMX\_PORT=9988，$JMX\_PORT就能取到值；而第一种方式有点逼格，本质是设置环境变量然后执行启动脚本，类似下面这种方式给JMX\_PORT赋值：
+
+```text
+[afei@kafka]$ export JMX_PORT=9988 
+[afei@kafka]$ bin/kafka-server-start.sh -daemon config/server.properties 
 ```
 
