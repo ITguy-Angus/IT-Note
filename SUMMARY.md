@@ -28,7 +28,7 @@
     * [叢集佈署](elastic-stack/elasticsearch/elasticsearch-cong-ji/elasticsearch-ji-qun-da-jian/README.md)
       * [7.12.0 集群架設實戰](elastic-stack/elasticsearch/elasticsearch-cong-ji/elasticsearch-ji-qun-da-jian/7.12.0-es-ji-qun-jia-she-shi-zhan.md)
       * [7.8.1版本搭建](elastic-stack/elasticsearch/elasticsearch-cong-ji/elasticsearch-ji-qun-da-jian/7.8.1-ban-ben-da-jian.md)
-  * [Elasticsearch 插件](elastic-stack/elasticsearch/elasticsearch-cha-jian/README.md)
+  * [Elasticsearch 管理工具](elastic-stack/elasticsearch/elasticsearch-cha-jian/README.md)
     * [ubuntu安装ElasticSearch-head插件](elastic-stack/elasticsearch/elasticsearch-cha-jian/ubuntu-an-zhuang-elasticsearchhead-cha-jian.md)
 * [Logstash](elastic-stack/logstash/README.md)
   * [Logstash 叢集](elastic-stack/logstash/untitled/README.md)

@@ -1,2 +1,2 @@
-# Elasticsearch 插件
+# Elasticsearch 管理工具
 
