@@ -100,7 +100,7 @@ Yikes! KeeperErrorCode = Unimplemented for /kafka-manager/mutex Try again.
 1.啟動Kafka服務需要設定JMX\_PORT 、 諾CMAK 服務器為獨立Server
 
 ```text
-$ nohup JMX_PORT=9997 bin/kafka-server-start.sh config/server-1.properties &
+$ JMX_PORT=9997 bin/kafka-server-start.sh config/server-1.properties &
 ```
 
 2.**修改kafka-run-class.sh脚本，第一行增加JMX\_PORT=9988即可。**
@@ -109,7 +109,7 @@ $ nohup JMX_PORT=9997 bin/kafka-server-start.sh config/server-1.properties &
 #編輯檔案
 vim /usr/local/kafka/bin/kafka-run-class.sh
 #在檔案第一行中增加
-JMX_PORT=9988
+JMX_PORT=9997
 ```
 
 3.所以，本质是给参数JMX\_PORT赋值，第二种方式在脚本的第一行增加JMX\_PORT=9988，$JMX\_PORT就能取到值；而第一种方式有点逼格，本质是设置环境变量然后执行启动脚本，类似下面这种方式给JMX\_PORT赋值：
