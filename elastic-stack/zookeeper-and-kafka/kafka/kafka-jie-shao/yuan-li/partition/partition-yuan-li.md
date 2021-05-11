@@ -1,4 +1,4 @@
-# Partition 原理
+# Partitions 資料存處邏輯
 
 
 

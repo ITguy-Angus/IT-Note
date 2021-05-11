@@ -1,6 +1,6 @@
-# Replication
+# 選舉與主從同步
 
-#### Controller選舉
+## Controller選舉
 
 當添加一個分區或分區增加副本的時候，都要從所有副本中選舉一個新的Leader出來。
 
@@ -68,9 +68,9 @@ ZAB（ZK）、Raft（Redis Sentinel）他們都是Paxos算法的變種，核心�
 
 提到kafka的選舉實現，最相近的是微軟的PacificA算法。
 
-在這種算法中，默認是讓ISR中第一個replica變成leader。像中國皇帝傳位一樣，優先傳給皇長子。
+在這種算法中，默認是讓ISR中第一個replica變成leader。像中國皇帝傳位一樣，優先傳給皇長子
 
-**主從同步**
+## **主從同步**
 
 leader確定之後，客户端的讀寫只能操作leader節點。follower需要向leader同步數據。
 
