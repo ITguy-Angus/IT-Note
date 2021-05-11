@@ -1,4 +1,4 @@
-# Partitions 資料存處邏輯
+# Partitions 資料存儲邏輯
 
 
 
