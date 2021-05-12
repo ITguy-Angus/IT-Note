@@ -1,6 +1,6 @@
 # 基于 ZooKeeper 搭建 Kafka 高可用集群
 
-## Kafka 系列（二）—— 基于 ZooKeeper 搭建 Kafka 偽高可用集群\[三個節點在同一台主機\]
+## 基于 ZooKeeper 搭建 Kafka 偽高可用集群\[三個節點在同一台主機\]
 
 Zookeeper 依靠java運行需先安裝Openjava-11-jdk 套件
 
