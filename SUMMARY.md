@@ -41,6 +41,7 @@
   * [Kafka](elastic-stack/zookeeper-and-kafka/kafka/README.md)
     * [Kafka 介紹](elastic-stack/zookeeper-and-kafka/kafka/kafka-jie-shao/README.md)
       * [原理](elastic-stack/zookeeper-and-kafka/kafka/kafka-jie-shao/yuan-li/README.md)
+        * [原理總結](elastic-stack/zookeeper-and-kafka/kafka/kafka-jie-shao/yuan-li/yuan-li-zong-jie.md)
         * [Partition](elastic-stack/zookeeper-and-kafka/kafka/kafka-jie-shao/yuan-li/partition/README.md)
           * [Partitions 資料存儲邏輯](elastic-stack/zookeeper-and-kafka/kafka/kafka-jie-shao/yuan-li/partition/partition-yuan-li.md)
         * [Replication](elastic-stack/zookeeper-and-kafka/kafka/kafka-jie-shao/yuan-li/replication-1/README.md)
