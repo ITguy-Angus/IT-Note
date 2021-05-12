@@ -257,9 +257,277 @@ bin/kafka-topics.sh --describe --bootstrap-server 10.140.0.10:9092 --topic my-re
 
 可以看到分区 0 的有 0,1,2 三个副本，且三个副本都是可用副本，都在 ISR\(in-sync Replica 同步副本\) 列表中，其中 1 为首领副本，此时代表集群已经搭建成功。
 
-## 集群設置
+ `vi /etc/systemd/system/kafka.service`
 
-\*\*\*\*
+```text
+[Unit]
+Description=Apache Kafka
+Requires=zookeeper.service
+After=zookeeper.service
+
+[Service]
+Type=simple
+User=kafka
+Group=kafkaa
+ExecStart=/opt/kafka/bin/kafka-server-start.sh /opt/kafka/config/server.properties
+ExecStop=/opt/kafka/bin/kafka-server-stop.sh
+
+[Install]
+WantedBy=multi-user.target
+```
+
+## Kafka 相關設定檔案
+
+### 設定檔詳解
+
+#### 1. 生產端的配置檔案 producer.properties
+
+```text
+#指定kafka節點列表，用於獲取metadata，不必全部指定
+#需要kafka的伺服器地址，來獲取每一個topic的分片數等元資料資訊。
+metadata.broker.list=kafka01:9092,kafka02:9092,kafka03:9092
+
+#生產者生產的訊息被髮送到哪個block，需要一個分組策略。
+#指定分割槽處理類。預設kafka.producer.DefaultPartitioner，表通過key雜湊到對應分割槽
+#partitioner.class=kafka.producer.DefaultPartitioner
+
+#生產者生產的訊息可以通過一定的壓縮策略（或者說壓縮演算法）來壓縮。訊息被壓縮後傳送到broker叢集，
+#而broker叢集是不會進行解壓縮的，broker叢集只會把訊息傳送到消費者叢集，然後由消費者來解壓縮。
+#是否壓縮，預設0表示不壓縮，1表示用gzip壓縮，2表示用snappy壓縮。
+#壓縮後訊息中會有頭來指明訊息壓縮型別，故在消費者端訊息解壓是透明的無需指定。
+#文字資料會以1比10或者更高的壓縮比進行壓縮。
+compression.codec=none
+
+#指定序列化處理類，訊息在網路上傳輸就需要序列化，它有String、陣列等許多種實現。
+serializer.class=kafka.serializer.DefaultEncoder
+
+#如果要壓縮訊息，這裡指定哪些topic要壓縮訊息，預設empty，表示不壓縮。
+#如果上面啟用了壓縮，那麼這裡就需要設定
+#compressed.topics= 
+#這是訊息的確認機制，預設值是0。在面試中常被問到。
+#producer有個ack引數，有三個值，分別代表：
+#（1）不在乎是否寫入成功；
+#（2）寫入leader成功；
+#（3）寫入leader和所有副本都成功；
+#要求非常可靠的話可以犧牲效能設定成最後一種。
+#為了保證訊息不丟失，至少要設定為1，也就
+#是說至少保證leader將訊息儲存成功。
+#設定傳送資料是否需要服務端的反饋,有三個值0,1,-1，分別代表3種狀態：
+#0: producer不會等待broker傳送ack。生產者只要把訊息傳送給broker之後，就認為傳送成功了，這是第1種情況；
+#1: 當leader接收到訊息之後傳送ack。生產者把訊息傳送到broker之後，並且訊息被寫入到本地檔案，才認為傳送成功，這是第二種情況；#-1: 當所有的follower都同步訊息成功後傳送ack。不僅是主的分割槽將訊息儲存成功了，
+#而且其所有的分割槽的副本數也都同步好了，才會被認為發動成功，這是第3種情況。
+request.required.acks=0
+
+#broker必須在該時間範圍之內給出反饋，否則失敗。
+#在向producer傳送ack之前,broker允許等待的最大時間 ，如果超時,
+#broker將會向producer傳送一個error ACK.意味著上一次訊息因為某種原因
+#未能成功(比如follower未能同步成功)
+request.timeout.ms=10000
+
+#生產者將訊息傳送到broker，有兩種方式，一種是同步，表示生產者傳送一條，broker就接收一條；
+#還有一種是非同步，表示生產者積累到一批的訊息，裝到一個池子裡面快取起來，再發送給broker，
+#這個池子不會無限快取訊息，在下面，它分別有一個時間限制（時間閾值）和一個數量限制（數量閾值）的引數供我們來設定。
+#一般我們會選擇非同步。
+#同步還是非同步傳送訊息，預設“sync”表同步，"async"表非同步。非同步可以提高發送吞吐量,
+#也意味著訊息將會在本地buffer中,並適時批量傳送，但是也可能導致丟失未傳送過去的訊息
+producer.type=sync
+
+#在async模式下,當message被快取的時間超過此值後,將會批量傳送給broker,
+#預設為5000ms
+#此值和batch.num.messages協同工作.
+queue.buffering.max.ms = 5000
+
+#非同步情況下，快取中允許存放訊息數量的大小。
+#在async模式下,producer端允許buffer的最大訊息量
+#無論如何,producer都無法儘快的將訊息傳送給broker,從而導致訊息在producer端大量沉積
+#此時,如果訊息的條數達到閥值,將會導致producer端阻塞或者訊息被拋棄，預設為10000條訊息。
+queue.buffering.max.messages=20000
+
+#如果是非同步，指定每次批量傳送資料量，預設為200
+batch.num.messages=500
+
+#在生產端的緩衝池中，訊息傳送出去之後，在沒有收到確認之前，該緩衝池中的訊息是不能被刪除的，
+#但是生產者一直在生產訊息，這個時候緩衝池可能會被撐爆，所以這就需要有一個處理的策略。
+#有兩種處理方式，一種是讓生產者先別生產那麼快，阻塞一下，等會再生產；另一種是將緩衝池中的訊息清空。
+#當訊息在producer端沉積的條數達到"queue.buffering.max.meesages"後阻塞一定時間後,
+#佇列仍然沒有enqueue(producer仍然沒有傳送出任何訊息)
+#此時producer可以繼續阻塞或者將訊息拋棄,此timeout值用於控制"阻塞"的時間
+#-1: 不限制阻塞超時時間，讓produce一直阻塞,這個時候訊息就不會被拋棄
+#0: 立即清空佇列,訊息被拋棄
+queue.enqueue.timeout.ms=-1
+
+
+#當producer接收到error ACK,或者沒有接收到ACK時,允許訊息重發的次數
+#因為broker並沒有完整的機制來避免訊息重複,所以當網路異常時(比如ACK丟失)
+#有可能導致broker接收到重複的訊息,預設值為3.
+message.send.max.retries=3
+
+#producer重新整理topic metada的時間間隔,producer需要知道partition leader
+#的位置,以及當前topic的情況
+#因此producer需要一個機制來獲取最新的metadata,當producer遇到特定錯誤時,
+#將會立即重新整理
+#(比如topic失效,partition丟失,leader失效等),此外也可以通過此引數來配置
+#額外的重新整理機制，預設值600000
+topic.metadata.refresh.interval.ms=60000
+```
+
+#### 2. 消費端的配置檔案 consumer.properties:
+
+```text
+#消費者叢集通過連線Zookeeper來找到broker。
+#zookeeper連線伺服器地址
+zookeeper.connect=zk01:2181,zk02:2181,zk03:2181
+
+#zookeeper的session過期時間，預設5000ms，用於檢測消費者是否掛掉
+zookeeper.session.timeout.ms=5000
+
+#當消費者掛掉，其他消費者要等該指定時間才能檢查到並且觸發重新負載均衡
+zookeeper.connection.timeout.ms=10000
+
+#這是一個時間閾值。
+#指定多久消費者更新offset到zookeeper中。
+#注意offset更新時基於time而不是每次獲得的訊息。
+#一旦在更新zookeeper發生異常並重啟，將可能拿到已拿到過的訊息
+zookeeper.sync.time.ms=2000
+
+#指定消費
+group.id=xxxxx
+
+#這是一個數量閾值，經測試是500條。
+#當consumer消費一定量的訊息之後,將會自動向zookeeper提交offset資訊#注意offset資訊並不是每消費一次訊息就向zk提交
+#一次,而是現在本地儲存(記憶體),並定期提交,預設為true
+auto.commit.enable=true
+
+# 自動更新時間。預設60 * 1000
+auto.commit.interval.ms=1000
+
+# 當前consumer的標識,可以設定,也可以有系統生成,
+#主要用來跟蹤訊息消費情況,便於觀察
+conusmer.id=xxx
+
+# 消費者客戶端編號，用於區分不同客戶端，預設客戶端程式自動產生
+client.id=xxxx
+
+# 最大取多少塊快取到消費者(預設10)
+queued.max.message.chunks=50
+
+# 當有新的consumer加入到group時,將會reblance,此後將會
+#有partitions的消費端遷移到新  的consumer上,如果一個
+#consumer獲得了某個partition的消費許可權,那麼它將會向zk
+#註冊 "Partition Owner registry"節點資訊,但是有可能
+#此時舊的consumer尚沒有釋放此節點, 此值用於控制,
+#註冊節點的重試次數.
+rebalance.max.retries=5
+
+#每拉取一批訊息的最大位元組數
+#獲取訊息的最大尺寸,broker不會像consumer輸出大於
+#此值的訊息chunk 每次feth將得到多條訊息,此值為總大小,
+#提升此值,將會消耗更多的consumer端記憶體
+fetch.min.bytes=6553600
+
+#當訊息的尺寸不足時,server阻塞的時間,如果超時,
+#訊息將立即傳送給consumer
+#資料一批一批到達，如果每一批是10條訊息，如果某一批還
+#不到10條，但是超時了，也會立即傳送給consumer。
+fetch.wait.max.ms=5000
+socket.receive.buffer.bytes=655360
+
+# 如果zookeeper沒有offset值或offset值超出範圍。
+#那麼就給個初始的offset。有smallest、largest、
+#anything可選，分別表示給當前最小的offset、
+#當前最大的offset、拋異常。預設largest
+auto.offset.reset=smallest
+
+# 指定序列化處理類
+derializer.class=kafka.serializer.DefaultDecoder
+```
+
+#### 3.服務端的配置檔案 server.properties
+
+```text
+#broker的全域性唯一編號，不能重複
+broker.id=0
+
+#用來監聽連結的埠，producer或consumer將在此埠建立連線
+port=9092
+
+#處理網路請求的執行緒數量，也就是接收訊息的執行緒數。
+#接收執行緒會將接收到的訊息放到記憶體中，然後再從記憶體中寫入磁碟。
+num.network.threads=3
+
+#訊息從記憶體中寫入磁碟是時候使用的執行緒數量。
+#用來處理磁碟IO的執行緒數量
+num.io.threads=8
+
+#傳送套接字的緩衝區大小
+socket.send.buffer.bytes=102400
+
+#接受套接字的緩衝區大小
+socket.receive.buffer.bytes=102400
+
+#請求套接字的緩衝區大小
+socket.request.max.bytes=104857600
+
+#kafka執行日誌存放的路徑
+log.dirs=/export/servers/logs/kafka
+
+#topic在當前broker上的分片個數
+num.partitions=2
+
+#我們知道segment檔案預設會被保留7天的時間，超時的話就
+#會被清理，那麼清理這件事情就需要有一些執行緒來做。這裡就是
+#用來設定恢復和清理data下資料的執行緒數量
+num.recovery.threads.per.data.dir=1
+
+#segment檔案保留的最長時間，預設保留7天（168小時），
+#超時將被刪除，也就是說7天之前的資料將被清理掉。
+log.retention.hours=168
+
+#滾動生成新的segment檔案的最大時間
+log.roll.hours=168
+
+#日誌檔案中每個segment的大小，預設為1G
+log.segment.bytes=1073741824
+
+#上面的引數設定了每一個segment檔案的大小是1G，那麼
+#就需要有一個東西去定期檢查segment檔案有沒有達到1G，
+#多長時間去檢查一次，就需要設定一個週期性檢查檔案大小
+#的時間（單位是毫秒）。
+log.retention.check.interval.ms=300000
+
+#日誌清理是否開啟
+log.cleaner.enable=true
+
+#broker需要使用zookeeper儲存meta資料
+zookeeper.connect=zk01:2181,zk02:2181,zk03:2181
+
+#zookeeper連結超時時間
+zookeeper.connection.timeout.ms=6000
+
+#上面我們說過接收執行緒會將接收到的訊息放到記憶體中，然後再從記憶體
+#寫到磁碟上，那麼什麼時候將訊息從記憶體中寫入磁碟，就有一個
+#時間限制（時間閾值）和一個數量限制（數量閾值），這裡設定的是
+#數量閾值，下一個引數設定的則是時間閾值。
+#partion buffer中，訊息的條數達到閾值，將觸發flush到磁碟。
+log.flush.interval.messages=10000
+
+#訊息buffer的時間，達到閾值，將觸發將訊息從記憶體flush到磁碟，
+#單位是毫秒。
+log.flush.interval.ms=3000
+
+#刪除topic需要server.properties中設定delete.topic.enable=true否則只是標記刪除
+delete.topic.enable=true
+
+#此處的host.name為本機IP(重要),如果不改,則客戶端會丟擲:
+#Producer connection to localhost:9092 unsuccessful 錯誤!
+host.name=kafka01
+
+advertised.host.name=192.168.239.128
+```
+
+
+
+### 實戰中的設定檔配置
 
 ```text
 # Licensed to the Apache Software Foundation (ASF) under one or more
@@ -326,7 +594,13 @@ log.dirs=/tmp/kafka-logs
 # The default number of log partitions per topic. More partitions allow greater
 # parallelism for consumption, but this will also result in more files across
 # the brokers.
+
+#修改此處為接受自動創建Topics
+auto.create.topics.enable = true
+#Topic預設的分片數量設定
 num.partitions=3
+#Topic 預設的副本數量更改
+default.replication.factor=3
 
 # The number of threads per data directory to be used for log recovery at startup and flushing at shutdown.
 # This value is recommended to be increased for installations with data dirs located in RAID array.
@@ -400,12 +674,5 @@ zookeeper.connection.timeout.ms=18000
 group.initial.rebalance.delay.ms=0
 
 
-############################ Topic setting ###########################################
-
-auto.create.topics.enable = true
-num.partitions=3
-default.replication.factor=3
 ```
-
-
 
