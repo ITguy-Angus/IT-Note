@@ -59,9 +59,6 @@
       * [Kafka CMAK \(網頁管理工具\)](elastic-stack/zookeeper-and-kafka/kafka/kafka-guan-li-gong-ju/kafka-cmak-wang-ye-guan-li-gong-ju.md)
     * [Kafka & Zookeeper 安裝](elastic-stack/zookeeper-and-kafka/kafka/kafka-an-zhuang-yu-gao-ke-yong-she-ding/README.md)
       * [基于 ZooKeeper 搭建 Kafka 高可用集群](elastic-stack/zookeeper-and-kafka/kafka/kafka-an-zhuang-yu-gao-ke-yong-she-ding/ji-yu-zookeeper-da-jian-kafka-gao-ke-yong-ji-qun.md)
-  * [Zookeeper](elastic-stack/zookeeper-and-kafka/zookeeper/README.md)
-    * [指令大權](elastic-stack/zookeeper-and-kafka/zookeeper/zhi-ling-da-quan.md)
-    * [設定檔大全](elastic-stack/zookeeper-and-kafka/zookeeper/she-ding-dang-da-quan.md)
 * [ELK 學習筆記](elastic-stack/elk-xue-xi-bi-ji/README.md)
   * [EBLK之2---EBLK](elastic-stack/elk-xue-xi-bi-ji/eblk-zhi-2eblk.md)
 

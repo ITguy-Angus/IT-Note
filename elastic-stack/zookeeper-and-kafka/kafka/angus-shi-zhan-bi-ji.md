@@ -4,7 +4,7 @@
 
 Zookeeper 依靠java運行需先安裝Openjava-11jdk 套件
 
-### 一、Zookeeper集群搭建
+## 01.Zookeeper集群搭建
 
 为保证集群高可用，Zookeeper 集群的节点数最好是奇数，最少有三个节点，所以这里搭建一个三个节点的集群。
 
@@ -133,7 +133,7 @@ echo "3" > /usr/local/zookeeper/data/03/myid
 
 
 
-### 二、Kafka集群搭建
+## 02.Kafka集群搭建
 
 #### 2.1 下载解压
 
@@ -200,7 +200,7 @@ zookeeper.connect=10.140.0.10:2181,10.140.0.11:2181,10.140.0.12:2181
 
 这里需要说明的是 `log.dirs` 指的是数据日志的存储位置，确切的说，就是分区数据的存储位置，而不是程序运行日志的位置。程序运行日志的位置是通过同一目录下的 `log4j.properties` 进行配置的。
 
-#### 2.4 启动集群
+### 2.4 启动集群
 
 分别指定不同配置文件，启动三个 Kafka 节点。启动后可以使用 jps 查看进程，此时应该有三个 zookeeper 进程和三个 kafka 进程。
 
@@ -232,4 +232,6 @@ bin/kafka-topics.sh --describe --bootstrap-server 10.140.0.10:9092 --topic my-re
 ![](../../../.gitbook/assets/tu-pian-%20%2827%29.png)
 
 可以看到分区 0 的有 0,1,2 三个副本，且三个副本都是可用副本，都在 ISR\(in-sync Replica 同步副本\) 列表中，其中 1 为首领副本，此时代表集群已经搭建成功。
+
+3.
 
