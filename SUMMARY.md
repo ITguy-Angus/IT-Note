@@ -44,6 +44,7 @@
         * [原理總結](elastic-stack/zookeeper-and-kafka/kafka/kafka-jie-shao/yuan-li/yuan-li-zong-jie.md)
         * [Partition](elastic-stack/zookeeper-and-kafka/kafka/kafka-jie-shao/yuan-li/partition/README.md)
           * [Partitions 資料存儲邏輯](elastic-stack/zookeeper-and-kafka/kafka/kafka-jie-shao/yuan-li/partition/partition-yuan-li.md)
+          * [ProducerRecord](elastic-stack/zookeeper-and-kafka/kafka/kafka-jie-shao/yuan-li/partition/producerrecord.md)
         * [Replication](elastic-stack/zookeeper-and-kafka/kafka/kafka-jie-shao/yuan-li/replication-1/README.md)
           * [選舉與主從同步](elastic-stack/zookeeper-and-kafka/kafka/kafka-jie-shao/yuan-li/replication-1/replication.md)
       * [相關消息](elastic-stack/zookeeper-and-kafka/kafka/kafka-jie-shao/xiang-guan-xiao-xi/README.md)
