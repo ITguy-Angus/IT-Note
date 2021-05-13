@@ -608,9 +608,11 @@ zookeeper.connection.timeout.ms=18000
 
 ```
 
-## 命令相關
+## Kafka 命令相關
 
-## 查看Topic指令
+## Kafka Topic 指令
+
+### 查看
 
 以下命令中使用的zookeeper配置地址为127.0.0.1:2181，bootstrap--server\(即broker\)地址为: 127.0.0.1:9292
 
@@ -633,7 +635,163 @@ Topic:lx_test_topic     PartitionCount:1        ReplicationFactor:1     Configs:
 
 列出了lx\_test\_topic的parition数量、replica因子以及每个partition的leader、replica信息
 
-### Consumer 相關指令
+### 創建
+
+創建Topic
+
+```text
+[root@shtest01 ~]# /usr/lib/kafka/bin/./kafka-topics.sh --create --topic topictest03 --replication-factor 1 --partitions 1 --zookeeper host01:2181,host02:2181,host03:2181/kafka
+Created topic "topictest03".
+```
+
+### 修改Topic 分片、副本數量
+
+一 .修改Kafka Topic副本数
+
+```text
+1.bin/kafka-topics.sh --bootstrap 1:2181,172.18.163.204:2181,172.18.163.205:2181 --create --partitions 5 --replication-factor 3 --topic test01   
+##新建测试topic test01
+2.bin/kafka-topics.sh --zookeeper 172.18.163.203:2181 --topic test01 --describe ##查看Topic详情如下:
+  Topic:test01    PartitionCount:5    ReplicationFactor:3    Configs:
+    Topic: test01    Partition: 0    Leader: 0    Replicas: 0,1,2    Isr: 0,1,2
+    Topic: test01    Partition: 1    Leader: 1    Replicas: 1,2,0    Isr: 1,2,0
+    Topic: test01    Partition: 2    Leader: 2    Replicas: 2,0,1    Isr: 2,0,1
+    Topic: test01    Partition: 3    Leader: 0    Replicas: 0,2,1    Isr: 0,2,1
+    Topic: test01    Partition: 4    Leader: 1    Replicas: 1,0,2    Isr: 1,0,2
+
+3.cat << EOF > increase-replication-factor.json
+{"version":1,
+"partitions":[
+{"topic":"test01","partition":0,"replicas":[0,2]},
+{"topic":"test01","partition":1,"replicas":[0,1]},
+{"topic":"test01","partition":2,"replicas":[1,2]},
+{"topic":"test01","partition":3,"replicas":[1,2]},
+{"topic":"test01","partition":4,"replicas":[0,2]}
+]
+}
+EOF
+##新建修改副本数 increase-replication-factor.json 文件
+4.bin/kafka-reassign-partitions.sh --zookeeper 172.18.163.203:2181,172.18.163.204:2181,172.18.163.205:2181  --reassignment-json-file increase-replication-factor.json --execute
+##执行操作命令将副本数改为 2 
+5.看到successfully,查看现在test01的副本数已经修改为2
+  Topic:test01    PartitionCount:5    ReplicationFactor:2    Configs:
+    Topic: test01    Partition: 0    Leader: 0    Replicas: 0,2    Isr: 0,2
+    Topic: test01    Partition: 1    Leader: 1    Replicas: 0,1    Isr: 1,0
+    Topic: test01    Partition: 2    Leader: 2    Replicas: 1,2    Isr: 2,1
+    Topic: test01    Partition: 3    Leader: 1    Replicas: 1,2    Isr: 2,1
+    Topic: test01    Partition: 4    Leader: 0    Replicas: 0,2    Isr: 0,2
+```
+
+二 . 修改Kafka 分区数操作步骤
+
+```text
+1.bin/kafka-topics.sh --zookeeper 172.18.163.203:2181,172.18.163.204:2181,172.18.163.205:2181 --create --partitions 5 --replication-factor 3 --topic test01   
+##新建测试topic test01
+2.bin/kafka-topics.sh --zookeeper 172.18.163.203:2181 --topic test01 --describe ##查看Topic详情如下:
+   Topic:test01    PartitionCount:5    ReplicationFactor:2    Configs:
+    Topic: test01    Partition: 0    Leader: 0    Replicas: 0,2    Isr: 0,2
+    Topic: test01    Partition: 1    Leader: 1    Replicas: 0,1    Isr: 1,0
+    Topic: test01    Partition: 2    Leader: 2    Replicas: 1,2    Isr: 2,1
+    Topic: test01    Partition: 3    Leader: 1    Replicas: 1,2    Isr: 2,1
+    Topic: test01    Partition: 4    Leader: 0    Replicas: 0,2    Isr: 0,2
+##分区数为5,副本数为2
+
+3.bin/kafka-topics.sh --zookeeper 172.18.163.203:2181,172.18.163.204:2181,172.18.163.205:2181 -alter --partitions 6 --topic test01  ##分区数只能增加不能减小
+
+4.bin/kafka-topics.sh --zookeeper 172.18.163.203:2181 --topic test01 --describe
+Topic:test01    PartitionCount:6    ReplicationFactor:2    Configs:
+    Topic: test01    Partition: 0    Leader: 0    Replicas: 0,2    Isr: 0,2
+    Topic: test01    Partition: 1    Leader: 1    Replicas: 0,1    Isr: 1,0
+    Topic: test01    Partition: 2    Leader: 2    Replicas: 1,2    Isr: 2,1
+    Topic: test01    Partition: 3    Leader: 1    Replicas: 1,2    Isr: 2,1
+    Topic: test01    Partition: 4    Leader: 0    Replicas: 0,2    Isr: 0,2
+    Topic: test01    Partition: 5    Leader: 2    Replicas: 2,0    Isr: 2,0
+##查看详情来看分区数已经被改成6个,副本数还是2
+```
+
+———————————————— 版权声明：本文为CSDN博主「DreamWeaver\_Zhou」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。 原文链接：[https://blog.csdn.net/DreamWeaver\_zhou/article/details/103260391](https://blog.csdn.net/DreamWeaver_zhou/article/details/103260391)
+
+### 
+
+### 
+
+### 
+
+### 刪除topic
+
+刪除kafka topic及其資料，嚴格來說並不是很難的操作。但是，往往給kafka 使用者帶來諸多問題。專案組之前接觸過多個開發者，發現都會偶然出現無法徹底刪除kafka的情況。本文總結多個刪除kafka topic的應用場景，總結一套刪除kafka topic的標準操作方法。
+
+**step1：**
+
+如果需要被刪除topic 此時正在被程式 produce和consume，則這些生產和消費程式需要停止。
+
+因為如果有程式正在生產或者消費該topic，則該topic的offset資訊一致會在broker更新。呼叫kafka delete命令則無法刪除該topic。
+
+同時，需要設定 auto.create.topics.enable = false，預設設定為true。如果設定為true，則produce或者fetch 不存在的topic也會自動建立這個topic。這樣會給刪除topic帶來很多意向不到的問題。
+
+所以，這一步很重要，必須設定auto.create.topics.enable = false，並認真把生產和消費程式徹底全部停止。
+
+**step2：**
+
+server.properties 設定 delete.topic.enable=true
+
+如果沒有設定 delete.topic.enable=true，則呼叫kafka 的delete命令無法真正將topic刪除，而是顯示（marked for deletion）
+
+**step3：**
+
+呼叫命令刪除topic：
+
+```text
+./bin/kafka-topics --delete --zookeeper 【zookeeper server:port】 --topic 【topic name】
+```
+
+**step4：**
+
+刪除kafka儲存目錄（server.properties檔案log.dirs配置，預設為"/data/kafka-logs"）相關topic的資料目錄。
+
+注意：如果kafka 有多個 broker，且每個broker 配置了多個數據盤（比如 /data/kafka-logs,/data1/kafka-logs …），且topic也有多個分割槽和replica，則需要對所有broker的所有資料盤進行掃描，刪除該topic的所有分割槽資料。
+
+**一般而言，經過上面4步就可以正常刪除掉topic和topic的資料。但是，如果經過上面四步，還是無法正常刪除topic，則需要對kafka在zookeeer的儲存資訊進行刪除。具體操作如下：**
+
+（注意：以下步驟裡面，kafka在zk裡面的節點資訊是採用預設值，如果你的系統修改過kafka在zk裡面的節點資訊，則需要根據系統的實際情況找到準確位置進行操作）
+
+**step5：**
+
+找一臺部署了zk的伺服器，使用命令：
+
+bin/zkCli.sh -server 【zookeeper server:port】
+
+登入到zk shell，然後找到topic所在的目錄：ls /brokers/topics，找到要刪除的topic，然後執行命令：
+
+rmr /brokers/topics/【topic name】
+
+即可，此時topic被徹底刪除。
+
+如果topic 是被標記為 marked for deletion，則通過命令 ls /admin/delete\_topics，找到要刪除的topic，然後執行命令：
+
+rmr /admin/delete\_topics/【topic name】
+
+**備註：**
+
+網路上很多其它文章還說明，需要刪除topic在zk上面的消費節點記錄、配置節點記錄，比如：
+
+rmr /consumers/【consumer-group】
+
+rmr /config/topics/【topic name】
+
+其實正常情況是不需要進行這兩個操作的，如果需要，那都是由於操作不當導致的。比如step1停止生產和消費程式沒有做，step2沒有正確配置。也就是說，正常情況下嚴格按照step1 – step5 的步驟，是一定能夠正常刪除topic的。
+
+**step6：**
+
+完成之後，呼叫命令：
+
+./bin/kafka-topics.sh --list --zookeeper 【zookeeper server:port】
+
+檢視現在kafka的topic資訊。正常情況下刪除的topic就不會再顯示。
+
+但是，如果還能夠查詢到刪除的topic，則重啟zk和kafka即可。
+
+## Kafka Consumer 指令
 
 3，查看consumer group列表，使用--list参数
 
