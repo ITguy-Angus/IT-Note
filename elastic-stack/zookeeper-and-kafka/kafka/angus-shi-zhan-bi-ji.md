@@ -146,8 +146,8 @@ After=syslog.target network.target
 Type=simple
 User=kafka
 Group=kafka
-ExecStart=/opt/kafka/bin/zookeeper-server-start.sh /opt/kafka/config/zookeeper.properties
-ExecStop=/opt/kafka/bin/zookeeper-server-stop.sh
+ExecStart=/usr/local/zookeeper/bin/zookeeper-server-start.sh /usr/local/zookeeper/config/server-1.properties
+ExecStop=/usr/local/zookeeper/bin/zookeeper-server-stop.sh
 
 [Install]
 WantedBy=multi-user.target
@@ -606,8 +606,62 @@ zookeeper.connect=10.140.0.10:2181,10.140.0.11:2181,0.140.0.12:2181
 # Timeout in ms for connecting to zookeeper
 zookeeper.connection.timeout.ms=18000
 
+```
 
+## 命令相關
 
+## 查看Topic指令
 
+以下命令中使用的zookeeper配置地址为127.0.0.1:2181，bootstrap--server\(即broker\)地址为: 127.0.0.1:9292
+
+1，查看kafka topic列表，使用--list参数
+
+```text
+bin/kafka-topics.sh --zookeeper 127.0.0.1:2181 --list
+__consumer_offsets
+lx_test_topic
+test
+```
+
+2，查看kafka特定topic的详情，使用--topic与--describe参数
+
+```text
+bin/kafka-topics.sh --zookeeper 127.0.0.1:2181 --topic lx_test_topic --describe
+Topic:lx_test_topic     PartitionCount:1        ReplicationFactor:1     Configs:
+        Topic: lx_test_topic    Partition: 0    Leader: 0       Replicas: 0     Isr: 0
+```
+
+列出了lx\_test\_topic的parition数量、replica因子以及每个partition的leader、replica信息
+
+### Consumer 相關指令
+
+3，查看consumer group列表，使用--list参数
+
+查看consumer group列表有新、旧两种命令，分别查看新版\(信息保存在broker中\)consumer列表和老版\(信息保存在zookeeper中\)consumer列表，因而需要区分指定bootstrap--server和zookeeper参数：
+
+```text
+bin/kafka-consumer-groups.sh --new-consumer --bootstrap-server 127.0.0.1:9292 --list
+lx_test
+```
+
+```text
+bin/kafka-consumer-groups.sh --zookeeper 127.0.0.1:2181 --list
+console-consumer-86845
+console-consumer-11967
+
+```
+
+4，查看特定consumer group 详情，使用--group与--describe参数
+
+同样根据新/旧版本的consumer，分别指定bootstrap-server与zookeeper参数:
+
+```text
+bin/kafka-consumer-groups.sh --new-consumer --bootstrap-server 127.0.0.1:9292 --group lx_test --describe
+GROUP                          TOPIC                          PARTITION  CURRENT-OFFSET  LOG-END-OFFSET  LAG             OWNER
+lx_test                        lx_test_topic             0          465             465             0               kafka-python-1.3.1_/127.0.0.1
+```
+
+```text
+bin/kafka-consumer-groups.sh --zookeeper 127.0.0.1:2181 --group console-consumer-11967 --describe
 ```
 
