@@ -610,7 +610,7 @@ zookeeper.connection.timeout.ms=18000
 
 ## Kafka 命令相關
 
-## Kafka Topic 指令
+## Kafka Topic
 
 ### 查看
 
@@ -797,7 +797,7 @@ rmr /config/topics/【topic name】
 
 但是，如果還能夠查詢到刪除的topic，則重啟zk和kafka即可。
 
-## Kafka Consumer 指令
+## Kafka Consumer
 
 3，查看consumer group列表，使用--list参数
 
