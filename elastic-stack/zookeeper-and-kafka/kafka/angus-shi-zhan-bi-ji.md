@@ -640,8 +640,8 @@ Topic:lx_test_topic     PartitionCount:1        ReplicationFactor:1     Configs:
 創建Topic
 
 ```text
-[root@shtest01 ~]# /usr/lib/kafka/bin/./kafka-topics.sh --create --topic topictest03 --replication-factor 1 --partitions 1 --zookeeper host01:2181,host02:2181,host03:2181/kafka
-Created topic "topictest03".
+[root@shtest01 ~]# bin/kafka-topics.sh --create --bootstrap-server 10.140.0.10:9092 --replication-factor 3 --partitions 3 --topic angus
+
 ```
 
 ### 修改Topic 分片、副本數量
@@ -649,16 +649,19 @@ Created topic "topictest03".
 一 .修改Kafka Topic副本数
 
 ```text
-1.bin/kafka-topics.sh --bootstrap 1:2181,172.18.163.204:2181,172.18.163.205:2181 --create --partitions 5 --replication-factor 3 --topic test01   
 ##新建测试topic test01
-2.bin/kafka-topics.sh --zookeeper 172.18.163.203:2181 --topic test01 --describe ##查看Topic详情如下:
-  Topic:test01    PartitionCount:5    ReplicationFactor:3    Configs:
-    Topic: test01    Partition: 0    Leader: 0    Replicas: 0,1,2    Isr: 0,1,2
-    Topic: test01    Partition: 1    Leader: 1    Replicas: 1,2,0    Isr: 1,2,0
-    Topic: test01    Partition: 2    Leader: 2    Replicas: 2,0,1    Isr: 2,0,1
-    Topic: test01    Partition: 3    Leader: 0    Replicas: 0,2,1    Isr: 0,2,1
-    Topic: test01    Partition: 4    Leader: 1    Replicas: 1,0,2    Isr: 1,0,2
+1.bin/kafka-topics.sh --zookeeper 10.140.0.10:2181 --create --partitions 3 --replication-factor 3 --topic test01   
 
+##查看Topic详情如下:
+2.bin/kafka-topics.sh --zookeeper 10.140.0.10:2181 --topic test01 --describe
+  Topic:test01	PartitionCount:5	ReplicationFactor:3	Configs:
+	Topic: test01	Partition: 0	Leader: 0	Replicas: 0,1,2	Isr: 0,1,2
+	Topic: test01	Partition: 1	Leader: 1	Replicas: 1,2,0	Isr: 1,2,0
+	Topic: test01	Partition: 2	Leader: 2	Replicas: 2,0,1	Isr: 2,0,1
+	Topic: test01	Partition: 3	Leader: 0	Replicas: 0,2,1	Isr: 0,2,1
+	Topic: test01	Partition: 4	Leader: 1	Replicas: 1,0,2	Isr: 1,0,2
+ 
+ ##創建increase-replication-factor.json 並匯內文
 3.cat << EOF > increase-replication-factor.json
 {"version":1,
 "partitions":[
@@ -670,16 +673,21 @@ Created topic "topictest03".
 ]
 }
 EOF
+
 ##新建修改副本数 increase-replication-factor.json 文件
 4.bin/kafka-reassign-partitions.sh --zookeeper 172.18.163.203:2181,172.18.163.204:2181,172.18.163.205:2181  --reassignment-json-file increase-replication-factor.json --execute
 ##执行操作命令将副本数改为 2 
+
 5.看到successfully,查看现在test01的副本数已经修改为2
-  Topic:test01    PartitionCount:5    ReplicationFactor:2    Configs:
-    Topic: test01    Partition: 0    Leader: 0    Replicas: 0,2    Isr: 0,2
-    Topic: test01    Partition: 1    Leader: 1    Replicas: 0,1    Isr: 1,0
-    Topic: test01    Partition: 2    Leader: 2    Replicas: 1,2    Isr: 2,1
-    Topic: test01    Partition: 3    Leader: 1    Replicas: 1,2    Isr: 2,1
-    Topic: test01    Partition: 4    Leader: 0    Replicas: 0,2    Isr: 0,2
+  Topic:test01	PartitionCount:5	ReplicationFactor:2	Configs:
+	Topic: test01	Partition: 0	Leader: 0	Replicas: 0,2	Isr: 0,2
+	Topic: test01	Partition: 1	Leader: 1	Replicas: 0,1	Isr: 1,0
+	Topic: test01	Partition: 2	Leader: 2	Replicas: 1,2	Isr: 2,1
+	Topic: test01	Partition: 3	Leader: 1	Replicas: 1,2	Isr: 2,1
+	Topic: test01	Partition: 4	Leader: 0	Replicas: 0,2	Isr: 0,2
+————————————————
+版权声明：本文为CSDN博主「DreamWeaver_Zhou」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/DreamWeaver_zhou/article/details/103260391
 ```
 
 二 . 修改Kafka 分区数操作步骤
@@ -709,13 +717,11 @@ Topic:test01    PartitionCount:6    ReplicationFactor:2    Configs:
 ##查看详情来看分区数已经被改成6个,副本数还是2
 ```
 
-———————————————— 版权声明：本文为CSDN博主「DreamWeaver\_Zhou」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。 原文链接：[https://blog.csdn.net/DreamWeaver\_zhou/article/details/103260391](https://blog.csdn.net/DreamWeaver_zhou/article/details/103260391)
+———————————————— 版权声明：本文为CSDN博主
 
 ### 
 
-### 
 
-### 
 
 ### 刪除topic
 
