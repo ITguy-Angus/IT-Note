@@ -652,64 +652,7 @@ ticker 是上篇範利用到的 topic
 
 ```text
 # 離開 zkCli
-quit
-```
-
-
-
-### 
-
-### Filebeat 與Kafka 對接
-
-修改配置：
-
-```text
-filebeat.prospectors:
-- input.type: log	# 来源的类型
-  enabled: true	  	# 表示这个input源启动
-  include_lines: ['content'] #包含 content 的行
-  paths: /tol/app/nginx/logs/content.log #监听文件的路径
-  tail_files: true	# 是否 tail 的方式
-  fields:
-    topicname: test_log_caoke # 自定义的字段名，可以在配置文件的别的地方引用
-
-# 处理，移除字段，这些字段 filebeat 会在写入 kafka 的时候默认加上 ，配置此可以移除，以 @ 开头的不可移除
-processors:
-- drop_fields:
-    fields: ["beat","input","source","offset","topicname","timestamp","@metadata"]
-
-#输出源为kafka，下面配置 kafka 的连接地址和 topic
-output.kafka: 
-    hosts: ["10.11.12.13:10193","10.11.12.17:10193"]
-    topic: '%{[fields.topicname]}'
-————————————————
-版权声明：本文为CSDN博主「习惯了想你」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
-原文链接：https://blog.csdn.net/Q748893892/article/details/101349888
-```
-
-```text
-filebeat.inputs:
-  - input.type: log
-    enable: true
-    include_lines: ['content']
-    paths: /var/log/nginx/access.log
-    tail_files: true
-    fields:
-           topicname: nginx-logs
-    scan_frequency: 5s
-    
-#開啟debug模式
-logging.level: debug
-    logging.selectors: [publish]
-    logging.to_files: true
-    
-output.kafka:
-    enable: true
-    hosts: ["10.140.0.10:9092"]
-    topic: '%{[fields.topicname]}'
-    compression: gzip
-    max_message_bytes: 100000
-                                 
+quit                  
 ```
 
 
@@ -721,45 +664,6 @@ nohup ./filebeat -e -c filebeat.yml &
 ```
 
 
-
-### Logstash 對接 Kafka
-
-
-
-```text
-input{
-
-    kafka{
-
-        bootstrap_servers => "10.140.0.10:9092,10.140.0.11:9092,10.140.0.12:9092"
-
-        topics => ["nginx-logs"]
-
-        codec => json
-
-    }
-
-}
-
-
-output {
-  elasticsearch {
-  
-    hosts => ["http://10.140.0.6:9200"]
-    
-     index => "nginx-logs"
-     
-#    index => "%{[@metadata][beat]}-%{[@metadata][version]}"
-
-    user => "elastic"
-    
-    password => "P@ssw0rd@Data!"
-    
-  }
-  
-}
-
-```
 
 ## 啟動命令
 
@@ -827,4 +731,473 @@ kafka-reassign-partitions --zookeeper 10.140.0.12:2181 --generate --topics-to-mo
 ### F&gt;K&gt;L&gt;E&gt;K 無法看到index 在kibana上面
 
 這個問題跟上面的問題有關西 如果Topic 只設定一個 1個partition 、1ReplicationFactor 則logstash 必須設定接受那一Broker 的topic 才行
+
+## 設定檔備份
+
+### Filebeat 與Kafka 對接
+
+修改配置：
+
+```text
+filebeat.prospectors:
+- input.type: log	# 来源的类型
+  enabled: true	  	# 表示这个input源启动
+  include_lines: ['content'] #包含 content 的行
+  paths: /tol/app/nginx/logs/content.log #监听文件的路径
+  tail_files: true	# 是否 tail 的方式
+  fields:
+    topicname: test_log_caoke # 自定义的字段名，可以在配置文件的别的地方引用
+
+# 处理，移除字段，这些字段 filebeat 会在写入 kafka 的时候默认加上 ，配置此可以移除，以 @ 开头的不可移除
+processors:
+- drop_fields:
+    fields: ["beat","input","source","offset","topicname","timestamp","@metadata"]
+
+#输出源为kafka，下面配置 kafka 的连接地址和 topic
+output.kafka: 
+    hosts: ["10.11.12.13:10193","10.11.12.17:10193"]
+    topic: '%{[fields.topicname]}'
+————————————————
+版权声明：本文为CSDN博主「习惯了想你」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/Q748893892/article/details/101349888      
+```
+
+
+
+```text
+filebeat.inputs:
+
+  - input.type: log
+
+    enable: true
+
+    #    include_lines: ['content']
+
+    paths: /var/log/nginx/access.log
+
+    tail_files: true
+
+    fields:
+           topicname: nginx-logs
+
+    scan_frequency: 5s
+
+    #開啟debug模式
+
+    #logging.level: debug
+
+    #logging.selectors: [publish]
+
+    #logging.to_files: true
+
+output.kafka:
+
+  enabled: true
+
+  hosts: ["10.140.0.10:9092","10.140.0.11:9092","10.140.0.12:9092"]
+
+  topic: "nginx-logs"
+
+  partition.hash:
+
+  reachable_only: true
+
+  compression: gzip
+
+  max_message_bytes: 1000000
+
+  required_acks: 1
+
+  logging.to_files: true
+
+```
+
+
+
+###  Kafka 對接 Logstash &gt; ES
+
+
+
+```text
+input{
+
+    kafka{
+
+        bootstrap_servers => "10.140.0.10:9092,10.140.0.11:9092,10.140.0.12:9092"
+
+        topics => ["nginx-logs"]
+
+        codec => json
+
+    }
+
+}
+
+
+output {
+  elasticsearch {
+  
+    hosts => ["http://10.140.0.6:9200"]
+    
+     index => "nginx-logs"
+     
+#    index => "%{[@metadata][beat]}-%{[@metadata][version]}"
+
+    user => "elastic"
+    
+    password => "P@ssw0rd@Data!"
+    
+  }
+  
+}
+
+```
+
+### ES 設定檔備份
+
+### 1 Data node
+
+```text
+# ======================== Elasticsearch Configuration =========================
+#
+# NOTE: Elasticsearch comes with reasonable defaults for most settings.
+#       Before you set out to tweak and tune the configuration, make sure you
+#       understand what are you trying to accomplish and the consequences.
+#
+# The primary way of configuring a node is via this file. This template lists
+# the most important settings you may want to configure for a production cluster.
+#
+# Please consult the documentation for further information on configuration options:
+# https://www.elastic.co/guide/en/elasticsearch/reference/index.html
+#
+# ---------------------------------- Cluster -----------------------------------
+#
+# Use a descriptive name for your cluster:
+#
+cluster.name: es-cluster
+#
+# ------------------------------------ Node ------------------------------------
+#
+# Use a descriptive name for the node:
+#
+node.name: node1
+#
+# Add custom attributes to the node:
+#
+#node.attr.rack: r1
+#
+# 是不是有資格主節點
+node.master: true
+# 是否儲存資料
+node.data: true
+# 最大叢集節點數，因為3個叢集，所以配置3
+node.max_local_storage_nodes: 3
+#
+#
+#
+#################################### Index ####################################
+# 設定索引的分片數,預設為5
+#index.number_of_shards: 2
+# 設定索引的副本數,預設為1:
+#index.number_of_replicas: 2
+# 配置檔案中提到的最佳實踐是,如果伺服器夠多,可以將分片提高,儘量將資料平均分佈到大叢集中去
+# 同時,如果增加副本數量可以有效的提高搜尋效能
+# 需要注意的是,"number_of_shards" 是索引建立後一次生成的,後續不可更改設定
+# "number_of_replicas" 是可以通過API去實時修改設定的
+# ----------------------------------- Paths ------------------------------------
+#
+# Path to directory where to store the data (separate multiple locations by comma):
+#
+path.data: /usr/local/elasticsearch/esdata
+#
+# Path to log files:
+#
+#path.logs: /usr/local/elasticsearch//logs
+#
+# ----------------------------------- Memory -----------------------------------
+#
+# Lock the memory on startup:
+#
+#bootstrap.memory_lock: true
+#
+# Make sure that the heap size is set to about half the memory available
+# on the system and that the owner of the process is allowed to use this
+# limit.
+#
+# Elasticsearch performs poorly when the system is swapping the memory.
+#
+# ---------------------------------- Network -----------------------------------
+#
+# By default Elasticsearch is only accessible on localhost. Set a different
+# address here to expose this node on the network:
+
+network.host: 0.0.0.0
+
+# By default Elasticsearch listens for HTTP traffic on the first free port it
+# finds starting at 9200. Set a specific HTTP port here:
+
+http.port: 9200
+
+# For more information, consult the network module documentation.
+#
+# --------------------------------- Discovery ----------------------------------
+#
+# Pass an initial list of hosts to perform discovery when this node is started:
+# The default list of hosts is ["127.0.0.1", "[::1]"]
+# es7.x之後新增的配置，寫入候選主節點的裝置地址，在開啟服務後可以被選為主節點
+#
+discovery.seed_hosts: ["10.140.0.6", "10.140.0.14", "10.140.0.15"]
+
+#
+# Bootstrap the cluster using an initial set of master-eligible nodes:
+#
+# es7.x之後新增的配置，初始化一個新的叢集時需要此配置來選舉master
+cluster.initial_master_nodes: ["node1"]
+#
+# For more information, consult the discovery and cluster formation module documentation.
+#
+# ---------------------------------- Various -----------------------------------
+#
+# Require explicit names when deleting indices:
+#
+#action.destructive_requires_name: true
+
+#xpack.security.enabled: true
+#xpack.security.transport.ssl.enabled: true
+#xpack.security.transport.ssl.verification_mode: certificate
+#xpack.security.transport.ssl.keystore.path: elastic-certificates.p12
+#xpack.security.transport.ssl.truststore.path: elastic-certificates.p12
+http.cors.enabled: true
+http.cors.allow-origin: "*"
+root@elasticsearch1:/usr/local/elasticsearch/config#
+
+```
+
+### 2 Data node
+
+```text
+# ======================== Elasticsearch Configuration =========================
+#
+# NOTE: Elasticsearch comes with reasonable defaults for most settings.
+#       Before you set out to tweak and tune the configuration, make sure you
+#       understand what are you trying to accomplish and the consequences.
+#
+# The primary way of configuring a node is via this file. This template lists
+# the most important settings you may want to configure for a production cluster.
+#
+# Please consult the documentation for further information on configuration options:
+# https://www.elastic.co/guide/en/elasticsearch/reference/index.html
+#
+# ---------------------------------- Cluster -----------------------------------
+#
+# Use a descriptive name for your cluster:
+#
+cluster.name: es-cluster
+#
+# ------------------------------------ Node ------------------------------------
+#
+# Use a descriptive name for the node:
+#
+node.name: node2
+#
+# Add custom attributes to the node:
+#
+#node.attr.rack: r1
+#
+# 是不是有資格主節點
+node.master: true
+# 是否儲存資料
+node.data: true
+# 最大叢集節點數，因為3個叢集，所以配置3
+node.max_local_storage_nodes: 3
+#
+#################################### Index ####################################
+# 設定索引的分片數,預設為5
+#index.number_of_shards: 5
+# 設定索引的副本數,預設為1:
+#index.number_of_replicas: 2
+# 配置檔案中提到的最佳實踐是,如果伺服器夠多,可以將分片提高,儘量將資料平均分佈到大叢集中去
+# 同時,如果增加副本數量可以有效的提高搜尋效能
+# 需要注意的是,"number_of_shards" 是索引建立後一次生成的,後續不可更改設定
+# "number_of_replicas" 是可以通過API去實時修改設定的 #
+#
+# ----------------------------------- Paths ------------------------------------
+#
+# Path to directory where to store the data (separate multiple locations by comma):
+#
+path.data: /usr/local/elasticsearch/esdata
+#
+# Path to log files:
+#
+#path.logs: /usr/local/elasticsearch//logs
+#
+# ----------------------------------- Memory -----------------------------------
+#
+# Lock the memory on startup:
+#
+#bootstrap.memory_lock: true
+#
+# Make sure that the heap size is set to about half the memory available
+# on the system and that the owner of the process is allowed to use this
+# limit.
+#
+# Elasticsearch performs poorly when the system is swapping the memory.
+#
+# ---------------------------------- Network -----------------------------------
+#
+# By default Elasticsearch is only accessible on localhost. Set a different
+# address here to expose this node on the network:
+
+network.host: 0.0.0.0
+
+# By default Elasticsearch listens for HTTP traffic on the first free port it
+# finds starting at 9200. Set a specific HTTP port here:
+
+http.port: 9200
+
+# For more information, consult the network module documentation.
+#
+# --------------------------------- Discovery ----------------------------------
+#
+# Pass an initial list of hosts to perform discovery when this node is started:
+# The default list of hosts is ["127.0.0.1", "[::1]"]
+# es7.x之後新增的配置，寫入候選主節點的裝置地址，在開啟服務後可以被選為主節點
+#
+discovery.seed_hosts: ["10.140.0.6", "10.140.0.14", "10.140.0.15"]
+
+#
+# Bootstrap the cluster using an initial set of master-eligible nodes:
+#
+# es7.x之後新增的配置，初始化一個新的叢集時需要此配置來選舉master
+cluster.initial_master_nodes: ["node1"]
+#
+# For more information, consult the discovery and cluster formation module documentation.
+#
+# ---------------------------------- Various -----------------------------------
+#
+# Require explicit names when deleting indices:
+#
+#action.destructive_requires_name: true
+
+#xpack.security.enabled: true
+#xpack.security.transport.ssl.enabled: true
+#xpack.security.transport.ssl.verification_mode: certificate
+#xpack.security.transport.ssl.keystore.path: elastic-certificates.p12
+#xpack.security.transport.ssl.truststore.path: elastic-certificates.p12
+http.cors.enabled: true
+http.cors.allow-origin: "*"
+root@elasticsearch2:/usr/local/elasticsearch/config#
+
+```
+
+### 3 Coordinating node
+
+```text
+# ======================== Elasticsearch Configuration =========================
+#
+# NOTE: Elasticsearch comes with reasonable defaults for most settings.
+#       Before you set out to tweak and tune the configuration, make sure you
+#       understand what are you trying to accomplish and the consequences.
+#
+# The primary way of configuring a node is via this file. This template lists
+# the most important settings you may want to configure for a production cluster.
+#
+# Please consult the documentation for further information on configuration options:
+# https://www.elastic.co/guide/en/elasticsearch/reference/index.html
+#
+# ---------------------------------- Cluster -----------------------------------
+#
+# Use a descriptive name for your cluster:
+#
+cluster.name: es-cluster
+#
+# ------------------------------------ Node ------------------------------------
+#
+# Use a descriptive name for the node:
+#
+node.name: node3
+#
+# Add custom attributes to the node:
+#
+#node.attr.rack: r1
+#
+# 是不是有資格主節點
+node.master: false
+# 是否儲存資料
+node.data: false
+# 是否為資料預處理節點
+node.ingest: false
+# 最大叢集節點數，因為3個叢集，所以配置3
+node.max_local_storage_nodes: 3
+#
+#
+#
+# ----------------------------------- Paths ------------------------------------
+#
+# Path to directory where to store the data (separate multiple locations by comma):
+#
+path.data: /usr/local/elasticsearch/esdata
+#
+# Path to log files:
+#
+#path.logs: /usr/local/elasticsearch//logs
+#
+# ----------------------------------- Memory -----------------------------------
+#
+# Lock the memory on startup:
+#
+#bootstrap.memory_lock: true
+#
+# Make sure that the heap size is set to about half the memory available
+# on the system and that the owner of the process is allowed to use this
+# limit.
+#
+# Elasticsearch performs poorly when the system is swapping the memory.
+#
+# ---------------------------------- Network -----------------------------------
+#
+# By default Elasticsearch is only accessible on localhost. Set a different
+# address here to expose this node on the network:
+
+network.host: 0.0.0.0
+
+# By default Elasticsearch listens for HTTP traffic on the first free port it
+# finds starting at 9200. Set a specific HTTP port here:
+
+http.port: 9200
+
+# For more information, consult the network module documentation.
+#
+# --------------------------------- Discovery ----------------------------------
+#
+# Pass an initial list of hosts to perform discovery when this node is started:
+# The default list of hosts is ["127.0.0.1", "[::1]"]
+# es7.x之後新增的配置，寫入候選主節點的裝置地址，在開啟服務後可以被選為主節點
+#
+discovery.seed_hosts: ["10.140.0.6", "10.140.0.14", "10.140.0.15"]
+
+#
+# Bootstrap the cluster using an initial set of master-eligible nodes:
+#
+# es7.x之後新增的配置，初始化一個新的叢集時需要此配置來選舉master
+cluster.initial_master_nodes: ["node1"]
+#
+# For more information, consult the discovery and cluster formation module documentation.
+#
+# ---------------------------------- Various -----------------------------------
+#
+# Require explicit names when deleting indices:
+#
+#action.destructive_requires_name: true
+
+#xpack.security.enabled: true
+#xpack.security.transport.ssl.enabled: true
+#xpack.security.transport.ssl.verification_mode: certificate
+#xpack.security.transport.ssl.keystore.path: elastic-certificates.p12
+#xpack.security.transport.ssl.truststore.path: elastic-certificates.p12
+http.cors.enabled: true
+http.cors.allow-origin: "*"
+root@elasticsearch3:/usr/local/elasticsearch/config#
+
+```
 
