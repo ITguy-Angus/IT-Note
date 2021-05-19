@@ -969,7 +969,7 @@ cluster.initial_master_nodes: ["node1"]
 #xpack.security.transport.ssl.truststore.path: elastic-certificates.p12
 http.cors.enabled: true
 http.cors.allow-origin: "*"
-root@elasticsearch1:/usr/local/elasticsearch/config#
+
 
 ```
 
@@ -1086,7 +1086,7 @@ cluster.initial_master_nodes: ["node1"]
 #xpack.security.transport.ssl.truststore.path: elastic-certificates.p12
 http.cors.enabled: true
 http.cors.allow-origin: "*"
-root@elasticsearch2:/usr/local/elasticsearch/config#
+
 
 ```
 
@@ -1197,7 +1197,7 @@ cluster.initial_master_nodes: ["node1"]
 #xpack.security.transport.ssl.truststore.path: elastic-certificates.p12
 http.cors.enabled: true
 http.cors.allow-origin: "*"
-root@elasticsearch3:/usr/local/elasticsearch/config#
+
 
 ```
 
