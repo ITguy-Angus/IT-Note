@@ -1,5 +1,13 @@
 # 基本操作
 
+## 狀態查詢
+
+curl -XGET '[http://localhost:9200/\_cluster/health?pretty](http://localhost:9200/_cluster/health?pretty)'
+
+
+
+
+
 ## Elasticsearch模組功能之-索引分片分配（Index shard allocation）
 
 ### 1、分片分配

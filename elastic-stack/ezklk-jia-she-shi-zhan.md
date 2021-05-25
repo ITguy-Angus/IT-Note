@@ -736,31 +736,7 @@ kafka-reassign-partitions --zookeeper 10.140.0.12:2181 --generate --topics-to-mo
 
 ### Filebeat 與Kafka 對接
 
-修改配置：
-
-```text
-filebeat.prospectors:
-- input.type: log	# 来源的类型
-  enabled: true	  	# 表示这个input源启动
-  include_lines: ['content'] #包含 content 的行
-  paths: /tol/app/nginx/logs/content.log #监听文件的路径
-  tail_files: true	# 是否 tail 的方式
-  fields:
-    topicname: test_log_caoke # 自定义的字段名，可以在配置文件的别的地方引用
-
-# 处理，移除字段，这些字段 filebeat 会在写入 kafka 的时候默认加上 ，配置此可以移除，以 @ 开头的不可移除
-processors:
-- drop_fields:
-    fields: ["beat","input","source","offset","topicname","timestamp","@metadata"]
-
-#输出源为kafka，下面配置 kafka 的连接地址和 topic
-output.kafka: 
-    hosts: ["10.11.12.13:10193","10.11.12.17:10193"]
-    topic: '%{[fields.topicname]}'
-————————————————
-版权声明：本文为CSDN博主「习惯了想你」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
-原文链接：https://blog.csdn.net/Q748893892/article/details/101349888      
-```
+修改配置：   
 
 
 
