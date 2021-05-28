@@ -1138,7 +1138,7 @@ nohup ./filebeat -e -c nginx.yml &
 /usr/local/zookeeper/bin/zkServer.sh status
 
 #kafka
-bin/kafka-server-start.sh config/server-1.properties &
+nohup bin/kafka-server-start.sh config/server-1.properties &
 ```
 
 ## 設定檔備份
@@ -1220,7 +1220,7 @@ broker.id=1
 #   FORMAT:
 #     listeners = listener_name://host_name:port
 #   EXAMPLE:
-     listeners = PLAINTEXT://10.140.0.10:9092
+     listeners = PLAINTEXT://10.146.0.3:9092
 #listeners=PLAINTEXT://:9092
 
 # Hostname and port the broker will advertise to producers and consumers. If not set,
