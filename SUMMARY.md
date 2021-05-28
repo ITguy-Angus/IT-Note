@@ -4,7 +4,7 @@
 
 ## Elastic Stack
 
-* [BZKLEK 架設實戰](elastic-stack/ezklk-jia-she-shi-zhan.md)
+* [ELK 架設實戰](elastic-stack/ezklk-jia-she-shi-zhan.md)
 * [Elastic Stack 介紹與安裝](elastic-stack/1.elasticstack-install/README.md)
   * [常用架構設計](elastic-stack/1.elasticstack-install/chang-yong-jia-gou-she-ji.md)
   * [ELK Stack tar安裝方式](elastic-stack/1.elasticstack-install/elk-stack-tar-an-zhuang-fang-shi.md)
