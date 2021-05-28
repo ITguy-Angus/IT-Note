@@ -1116,12 +1116,14 @@ curl -XGET 'http://localhost:9200/_cluster/health?pretty'
 ### ELK
 
 ```text
+#filebeat
+nohup ./filebeat -e -c nginx.yml &
+#logstash
+nohup bin/logstash -f config/logstash.conf &
 #Elasticsearch-head
 nohup grunt server &
 #CMAK
 nohup bin/cmak -Dconfig.file=conf/application.conf -Dhttp.port=9001 &
-#filebeat
-nohup ./filebeat -e -c nginx.yml &
 ```
 
 ### Zookeeper&Kafka
@@ -1138,7 +1140,7 @@ nohup ./filebeat -e -c nginx.yml &
 /usr/local/zookeeper/bin/zkServer.sh status
 
 #kafka
-nohup bin/kafka-server-start.sh config/server-2.properties &
+nohup bin/kafka-server-start.sh config/server-3.properties &
 ```
 
 ## 設定檔備份
@@ -1337,7 +1339,7 @@ default.replication.factor=3
 
 ```
 
-### Filebeat 與Kafka 對接
+### Filebeat 
 
 修改配置：   
 
@@ -1373,7 +1375,7 @@ output.kafka:
 
   enabled: true
 
-  hosts: ["10.140.0.10:9092","10.140.0.11:9092","10.140.0.12:9092"]
+  hosts: ["10.146.0.3:9092","10.146.0.5:9092","10.146.0.6:9092"]
 
   topic: "nginx-logs"
 
@@ -1393,7 +1395,7 @@ output.kafka:
 
 
 
-###  Kafka 對接 Logstash &gt; ES
+###  Logstash
 
 
 
@@ -1402,7 +1404,7 @@ input{
 
     kafka{
 
-        bootstrap_servers => "10.140.0.10:9092,10.140.0.11:9092,10.140.0.12:9092"
+        bootstrap_servers => "10.146.0.3:9092,10.146.0.5:9092,10.140.0.6:9092"
 
         topics => ["nginx-logs"]
 
