@@ -344,11 +344,7 @@ output.kafka:
 
 
 
-## Kafka 系列—— 基于 ZooKeeper 搭建 Kafka 偽高可用集群\[三個節點在同一台主機\]
-
-  
-
-## 基于 ZooKeeper 搭建 Kafka 集群
+## Kafka — 基于 ZooKeeper 搭建 Kafka 
 
 ## Zookeeper集群搭建
 
@@ -624,7 +620,7 @@ ExecStop=/opt/kafka/bin/kafka-server-stop.sh
 WantedBy=multi-user.target
 ```
 
-## Kafka 相關設定檔案
+### Kafka 相關設定檔案
 
 ### 設定檔詳解
 
@@ -956,7 +952,7 @@ zookeeper.connection.timeout.ms=18000
 
 ```
 
-## Kafka 命令相關
+### Kafka 命令相關
 
 ### Kafka 集群狀態查詢方式
 
@@ -1009,7 +1005,7 @@ ticker 是上篇範利用到的 topic
 quit                  
 ```
 
-## Kafka Topic
+### Kafka Topic
 
 ### 查看
 
@@ -1196,7 +1192,7 @@ rmr /config/topics/【topic name】
 
 但是，如果還能夠查詢到刪除的topic，則重啟zk和kafka即可。
 
-## Kafka Consumer
+### Kafka Consumer
 
 3，查看consumer group列表，使用--list参数
 
