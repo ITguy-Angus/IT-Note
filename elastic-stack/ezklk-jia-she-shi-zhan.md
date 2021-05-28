@@ -1246,7 +1246,7 @@ nohup grunt server &
 #CMAK
 nohup bin/cmak -Dconfig.file=conf/application.conf -Dhttp.port=9001 &
 #filebeat
-nohup ./filebeat -e -c filebeat.yml &
+nohup ./filebeat -e -c nginx.yml &
 ```
 
 ## 設定檔備份
