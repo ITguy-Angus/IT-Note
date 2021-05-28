@@ -1138,7 +1138,7 @@ nohup ./filebeat -e -c nginx.yml &
 /usr/local/zookeeper/bin/zkServer.sh status
 
 #kafka
-nohup bin/kafka-server-start.sh config/server-1.properties &
+nohup bin/kafka-server-start.sh config/server-2.properties &
 ```
 
 ## 設定檔備份
