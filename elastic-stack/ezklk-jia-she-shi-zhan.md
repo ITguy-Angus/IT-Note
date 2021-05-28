@@ -1245,13 +1245,7 @@ nohup JMX_PORT=9997 bin/kafka-server-start.sh config/server-1.properties &
 nohup grunt server &
 #CMAK
 nohup bin/cmak -Dconfig.file=conf/application.conf -Dhttp.port=9001 &
-```
-
-
-
-啟動filebeat:
-
-```text
+#filebeat
 nohup ./filebeat -e -c filebeat.yml &
 ```
 
