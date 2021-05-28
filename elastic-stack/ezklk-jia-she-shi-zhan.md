@@ -206,52 +206,6 @@ output {
 * 確認是否成功啟動
 
 ```text
-[1] 17978
-root@logstash1:/usr/local/logstash# Using bundled JDK: /usr/local/logstash/jdk
-OpenJDK 64-Bit Server VM warning: Option UseConcMarkSweepGC was deprecated in version 9.0 and will likely be remove
-d in a future release.
-Sending Logstash logs to /usr/local/logstash/logs which is now configured via log4j2.properties
-[2021-04-19T01:17:47,801][INFO ][logstash.runner          ] Log4j configuration path used is: /usr/local/logstash/c
-onfig/log4j2.properties
-[2021-04-19T01:17:47,834][INFO ][logstash.runner          ] Starting Logstash {"logstash.version"=>"7.12.0", "jruby
-.version"=>"jruby 9.2.13.0 (2.5.7) 2020-08-03 9a89c94bcc OpenJDK 64-Bit Server VM 11.0.10+9 on 11.0.10+9 +indy +jit
- [linux-x86_64]"}
-[2021-04-19T01:17:48,799][WARN ][logstash.config.source.multilocal] Ignoring the 'pipelines.yml' file because modul
-es or command line options are specified
-[2021-04-19T01:17:50,368][INFO ][logstash.agent           ] Successfully started Logstash API endpoint {:port=>9600
-}
-[2021-04-19T01:17:51,843][INFO ][org.reflections.Reflections] Reflections took 76 ms to scan 1 urls, producing 23 k
-eys and 47 values 
-[2021-04-19T01:17:53,283][INFO ][logstash.outputs.elasticsearch][main] Elasticsearch pool URLs updated {:changes=>{
-:removed=>[], :added=>[http://10.140.0.6:9200/]}}
-[2021-04-19T01:17:53,635][WARN ][logstash.outputs.elasticsearch][main] Restored connection to ES instance {:url=>"h
-ttp://10.140.0.6:9200/"}
-[2021-04-19T01:17:53,710][INFO ][logstash.outputs.elasticsearch][main] ES Output version determined {:es_version=>7
-}
-[2021-04-19T01:17:53,715][WARN ][logstash.outputs.elasticsearch][main] Detected a 6.x and above cluster: the `type`
- event field won't be used to determine the document _type {:es_version=>7}
-[2021-04-19T01:17:53,784][INFO ][logstash.outputs.elasticsearch][main] New Elasticsearch output {:class=>"LogStash:
-:Outputs::ElasticSearch", :hosts=>["http://10.140.0.6:9200"]}
-[2021-04-19T01:17:53,948][INFO ][logstash.outputs.elasticsearch][main] Using a default mapping template {:es_versio
-n=>7, :ecs_compatibility=>:disabled}
-[2021-04-19T01:17:54,021][INFO ][logstash.javapipeline    ][main] Starting pipeline {:pipeline_id=>"main", "pipelin
-e.workers"=>2, "pipeline.batch.size"=>125, "pipeline.batch.delay"=>50, "pipeline.max_inflight"=>250, "pipeline.sour
-ces"=>["/usr/local/logstash/config/logstash.conf"], :thread=>"#<Thread:0xac94cdd run>"}
-[2021-04-19T01:17:54,062][INFO ][logstash.outputs.elasticsearch][main] Attempting to install template {:manage_temp
-late=>{"index_patterns"=>"logstash-*", "version"=>60001, "settings"=>{"index.refresh_interval"=>"5s", "number_of_sh
-ards"=>1}, "mappings"=>{"dynamic_templates"=>[{"message_field"=>{"path_match"=>"message", "match_mapping_type"=>"st
-ring", "mapping"=>{"type"=>"text", "norms"=>false}}}, {"string_fields"=>{"match"=>"*", "match_mapping_type"=>"strin
-g", "mapping"=>{"type"=>"text", "norms"=>false, "fields"=>{"keyword"=>{"type"=>"keyword", "ignore_above"=>256}}}}}]
-, "properties"=>{"@timestamp"=>{"type"=>"date"}, "@version"=>{"type"=>"keyword"}, "geoip"=>{"dynamic"=>true, "prope
-rties"=>{"ip"=>{"type"=>"ip"}, "location"=>{"type"=>"geo_point"}, "latitude"=>{"type"=>"half_float"}, "longitude"=>
-{"type"=>"half_float"}}}}}}}
-[2021-04-19T01:17:55,597][INFO ][logstash.javapipeline    ][main] Pipeline Java execution initialization time {"sec
-onds"=>1.57}
-[2021-04-19T01:17:55,646][INFO ][logstash.inputs.beats    ][main] Starting input listener {:address=>"0.0.0.0:5044"
-}
-[2021-04-19T01:17:55,670][INFO ][logstash.javapipeline    ][main] Pipeline started {"pipeline.id"=>"main"}
-[2021-04-19T01:17:55,752][INFO ][logstash.agent           ] Pipelines running {:count=>1, :running_pipelines=>[:mai
-n], :non_running_pipelines=>[]}
 [2021-04-19T01:17:55,954][INFO ][org.logstash.beats.Server][main][d30cec8718b4eec2fe086d75154440802a7f35a6572519d10
 06ee383031ddb4c] Starting server on port: 5044
 ```
@@ -472,6 +426,10 @@ echo "3" > /usr/local/zookeeper/data/03/myid
 #### 集群验证
 
 使用 jps 查看进程，并且使用 `zkServer.sh status` 查看集群各个节点状态。如图三个节点进程均启动成功，并且两个节点为 follower 节点，一个节点为 leader 节点。
+
+```text
+/usr/local/zookeeper/bin/zkServer.sh status
+```
 
 ![](../.gitbook/assets/tu-pian-.png)
 
@@ -1158,8 +1116,6 @@ curl -XGET 'http://localhost:9200/_cluster/health?pretty'
 ### ELK
 
 ```text
-#kafka
-nohup JMX_PORT=9997 bin/kafka-server-start.sh config/server-1.properties &
 #Elasticsearch-head
 nohup grunt server &
 #CMAK
@@ -1171,13 +1127,16 @@ nohup ./filebeat -e -c nginx.yml &
 ### Zookeeper&Kafka
 
 ```text
+#Zookeeper
 # 启动节点1
 /usr/local/zookeeper/bin/zkServer.sh start
 # 启动节点2
 /usr/local/zookeeper/bin/zkServer.sh start
 # 启动节点3
 /usr/local/zookeeper/bin/zkServer.sh start
-复制代码
+
+#kafka
+bin/kafka-server-start.sh config/server-1.properties &
 ```
 
 ## 設定檔備份
@@ -1222,8 +1181,8 @@ clientPort=2181
 #metricsProvider.httpPort=7000
 #metricsProvider.exportJvmInfo=true
 server.1=10.146.0.3:2287:3387
-server.2=10.140.0.5:2287:3387
-server.3=10.140.0.6:2287:3387
+server.2=10.146.0.5:2287:3387
+server.3=10.146.0.6:2287:3387
 
 ```
 
