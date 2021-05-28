@@ -1134,6 +1134,8 @@ nohup ./filebeat -e -c nginx.yml &
 /usr/local/zookeeper/bin/zkServer.sh start
 # 启动节点3
 /usr/local/zookeeper/bin/zkServer.sh start
+#查詢啟動是否成功
+/usr/local/zookeeper/bin/zkServer.sh status
 
 #kafka
 bin/kafka-server-start.sh config/server-1.properties &
