@@ -117,7 +117,7 @@ kibana.index: ".kibana"
 
 * 进入启动目录启动 /usr/local/kibana/bin 使用后台启动方式
 
-`nobhub ./kibana &`
+`nohub ./kibana &`
 
 * 測試是否成功啟動
 
@@ -1109,7 +1109,68 @@ bin/kafka-consumer-groups.sh --zookeeper 127.0.0.1:2181 --group console-consumer
 curl -XGET 'http://localhost:9200/_cluster/health?pretty'
 ```
 
+### Elasticsearch es 手動操作分片設定
 
+```text
+#動態設定es索引副本數量
+curl -XPUT 'http://localhost:9200/log4j-emobilelog/_settings' -d '{
+   "number_of_replicas" : 2
+}'
+
+#設定es不自動分配分片
+curl -XPUT "http://localhost:9200/log4j-emobilelog/_settings' -d '{
+   "cluster.routing.allocation.disable_allocation" : true
+}'
+
+#手動移動分片
+curl -XPOST 'http://168.7.1.67:9200/_cluster/reroute' -d  '{
+   "commands" : [{
+		"move" : {
+			"index" : "log4j-emobilelog",
+			"shard" : 0,
+			"from_node" : "es-0",
+			"to_node" : "es-3"
+		}
+	}]
+}'
+
+#手動分配分片
+curl -XPOST 'http://168.7.1.67:9200/_cluster/reroute' -d  '{
+   "commands" : [{
+		"allocate" : {
+			"index" : ".kibana",
+			"shard" : 0,
+			"node" : "es-2",
+		}
+	}]
+}'
+```
+
+
+
+所以我們根據提示，配置檔案去掉這個引數，啟動起來後，通過API設定：
+
+```text
+[elklog@iZ2ze16gjdevwfzy53xejgZ logs]$ curl -XPUT 'http://localhost:9200/_all/_settings?preserve_existing=true' -d '{
+>   "index.number_of_replicas" : "0"
+> }'
+{"error":"Content-Type header [application/x-www-form-urlencoded] is not supported","status":406}[elklog@iZ2ze16gjdevwfzy53xejgZ logs]$ 
+```
+
+看來還需要設定http頭資訊：
+
+```text
+[elklog@iZ2ze16gjdevwfzy53xejgZ logs]$ curl -H "Content-Type: application/json" -XPUT 'http://localhost:9200/_all/_settings?preserve_existing=true' -d '{
+>   "index.number_of_replicas" : "0"
+> }'
+{"acknowledged":true}
+```
+
+分片設定同理：
+
+```text
+curl -H "Content-Type: application/json" -XPUT 'http://localhost:9200/_all/_settings?preserve_existing=true' -d '{"index.number_of_shards" : "3" }'
+```
 
 ## 啟動命令
 
@@ -1126,6 +1187,8 @@ nohup grunt server &
 nohup bin/cmak -Dconfig.file=conf/application.conf -Dhttp.port=9001 &
 #Elasticsearch 
 ./elasticsearch -d
+#kibana
+nohup ./kibana &
 ```
 
 ### Zookeeper&Kafka
