@@ -1124,6 +1124,8 @@ nohup bin/logstash -f config/logstash.conf &
 nohup grunt server &
 #CMAK
 nohup bin/cmak -Dconfig.file=conf/application.conf -Dhttp.port=9001 &
+#Elasticsearch 
+./elasticsearch -d
 ```
 
 ### Zookeeper&Kafka
