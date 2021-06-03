@@ -1114,7 +1114,7 @@ curl -XGET 'http://localhost:9200/_cluster/health?pretty'
 ### 創建Index
 
 ```text
-curl -XPUT "http://localhost:9200/test2" -H 'Content-Type: application/json' -d'{  "settings": {    "number_of_shards": 3,    "number_of_replicas": 2  },  "mappings": {    "properties": {      "field1": { "type": "text" }    }  }}'
+curl -XPUT "http://localhost:9200/nginx-logs" -H 'Content-Type: application/json' -d'{  "settings": {    "number_of_shards": 3,    "number_of_replicas": 2  },  "mappings": {    "properties": {      "field1": { "type": "text" }    }  }}'
 ```
 
 ## 啟動命令
