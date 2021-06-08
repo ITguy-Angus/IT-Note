@@ -298,6 +298,46 @@ output.kafka:
 
 
 
+## 啟動命令
+
+### ELK
+
+```text
+#filebeat
+nohup ./filebeat -e -c nginx.yml &
+#logstash
+nohup bin/logstash -f config/logstash.conf &
+#Elasticsearch-head
+nohup grunt server &
+#CMAK
+nohup bin/cmak -Dconfig.file=conf/application.conf -Dhttp.port=9001 &
+#Elasticsearch 
+./elasticsearch -d
+#kibana
+nohup ./kibana &
+```
+
+### Zookeeper&Kafka
+
+```text
+#Zookeeper
+启动节点
+/usr/local/zookeeper/bin/zkServer.sh start
+
+#查詢啟動是否成功
+/usr/local/zookeeper/bin/zkServer.sh status
+
+#kafka
+nohup bin/kafka-server-start.sh config/server-3.properties &
+```
+
+### Seige
+
+```text
+siege  http://10.170.0.11/ -c500 -t600s -b
+siege  http://10.170.0.2/ -c500 -t600s -b
+```
+
 ## Kafka — 基于 ZooKeeper 搭建 Kafka 
 
 ## Zookeeper集群搭建
@@ -1142,46 +1182,6 @@ curl -XPUT "http://localhost:9200/nginx-logs" -H 'Content-Type: application/json
 
 
 
-
-## 啟動命令
-
-### ELK
-
-```text
-#filebeat
-nohup ./filebeat -e -c nginx.yml &
-#logstash
-nohup bin/logstash -f config/logstash.conf &
-#Elasticsearch-head
-nohup grunt server &
-#CMAK
-nohup bin/cmak -Dconfig.file=conf/application.conf -Dhttp.port=9001 &
-#Elasticsearch 
-./elasticsearch -d
-#kibana
-nohup ./kibana &
-```
-
-### Zookeeper&Kafka
-
-```text
-#Zookeeper
-启动节点
-/usr/local/zookeeper/bin/zkServer.sh start
-
-#查詢啟動是否成功
-/usr/local/zookeeper/bin/zkServer.sh status
-
-#kafka
-nohup bin/kafka-server-start.sh config/server-3.properties &
-```
-
-### Seige
-
-```text
-siege  http://10.170.0.11/ -c500 -t600s -b
-siege  http://10.170.0.2/ -c500 -t600s -b
-```
 
 ## 設定檔備份
 
