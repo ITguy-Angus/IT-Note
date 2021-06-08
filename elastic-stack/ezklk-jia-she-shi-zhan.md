@@ -1201,9 +1201,20 @@ curl -XPUT "http://localhost:9200/nginx-logs" -H 'Content-Type: application/json
 
 ![](https://pic1.xuehuaimg.com/proxy/csdn/https://img-blog.csdnimg.cn/20190414093718906.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3p1b2NoYW5nX2xpdQ==,size_16,color_FFFFFF,t_70)
 
+#### consumer\_threads  設定方式
 
-
-
+```text
+input {
+  kafka {
+    bootstrap_servers => "10.146.0.3:9092,10.146.0.5:9092,10.140.0.6:9092"
+    topics => ["nginx-logs"]
+    consumer_threads => 9
+    group_id => "logstash"
+    codec => "json"
+    decorate_events => true
+  }
+}
+```
 
 ## 設定檔備份
 
