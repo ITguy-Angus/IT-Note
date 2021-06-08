@@ -1490,7 +1490,7 @@ input {
 
 output {
   elasticsearch {
-    hosts => ["10.140.0.6:9200", "10.140.0.14:9200","10.140.0.16:9200"]
+    hosts => ["10.140.0.6:9200","10.140.0.14:9200","10.140.0.16:9200"]
     index => "nginx-logs" 
 #    index => "%{[@metadata][beat]}-%{[@metadata][version]}"
 #    user => "elastic" 
