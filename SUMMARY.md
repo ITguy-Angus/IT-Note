@@ -4,7 +4,7 @@
 
 ## Elastic Stack
 
-* [ELK 架設實戰](elastic-stack/ezklk-jia-she-shi-zhan.md)
+* [ELK 實戰筆記](elastic-stack/ezklk-jia-she-shi-zhan.md)
 * [Elastic Stack 介紹與安裝](elastic-stack/1.elasticstack-install/README.md)
   * [常用架構設計](elastic-stack/1.elasticstack-install/chang-yong-jia-gou-she-ji.md)
   * [ELK Stack tar安裝方式](elastic-stack/1.elasticstack-install/elk-stack-tar-an-zhuang-fang-shi.md)
@@ -32,6 +32,8 @@
       * [7.12.0 集群架設實戰](elastic-stack/elasticsearch/elasticsearch-cong-ji/elasticsearch-ji-qun-da-jian/7.12.0-es-ji-qun-jia-she-shi-zhan.md)
       * [7.8.1版本搭建](elastic-stack/elasticsearch/elasticsearch-cong-ji/elasticsearch-ji-qun-da-jian/7.8.1-ban-ben-da-jian.md)
   * [Elasticsearch 管理工具](elastic-stack/elasticsearch/elasticsearch-cha-jian/README.md)
+    * [Untitled](elastic-stack/elasticsearch/elasticsearch-cha-jian/untitled.md)
+    * [管理套件](elastic-stack/elasticsearch/elasticsearch-cha-jian/guan-li-tao-jian.md)
     * [ubuntu安装ElasticSearch-head插件](elastic-stack/elasticsearch/elasticsearch-cha-jian/ubuntu-an-zhuang-elasticsearchhead-cha-jian.md)
 * [Logstash](elastic-stack/logstash/README.md)
   * [Logstash 叢集](elastic-stack/logstash/untitled/README.md)

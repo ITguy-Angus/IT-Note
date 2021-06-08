@@ -1,4 +1,4 @@
-# ELK 架設實戰
+# ELK 實戰筆記
 
 ## ELK Stack 7.12 解壓安裝
 
@@ -1167,7 +1167,9 @@ default.replication.factor=3
 curl -XGET 'http://localhost:9200/_cluster/health?pretty'
 ```
 
-### Elasticsearch Index
+### 
+
+Elasticsearch Index
 
 ### 創建Index
 
@@ -1178,6 +1180,26 @@ curl -XPUT "http://localhost:9200/nginx-logs" -H 'Content-Type: application/json
 ## logstash
 
 
+
+
+
+### logstash 坑!!
+
+#### 1.kafka Topic 消費產生過多lag
+
+####  大早上的收到郵件告警，提示a日誌的ods層數量與dwd層的對不上，想到了上一次也是這樣，不過上一次治標不治本，只是把kafka的group\_id換了，能保證一小段時間的正常，當時也只知道這是消費延遲造成的，因爲通過查詢發現，本來4號的日誌4號就應該寫到hdfs完成的，結果5號，6號還在往裏面寫，這次就準備好好的排查一下
+
+通過kafka-monitor的監控，發現a日誌的topic\_id的28個分區的Lag都很大，延遲比較嚴重，達到了9千多萬，首先是考慮到服務器性能問題，因爲該日誌消費是在一臺負載比較高的服務器上，所以先把它遷移到負載和cpu比較ok的服務器，啓動以後觀察一小時，發現Lag還是在不斷的增加，說明消費速度還是趕不上生產的速度，說明單單遷移一下服務器是解決不了問題的。
+
+查看了一下logstash官網發現kafka作爲input時，有一個關於消費線程數量的配置是很重要的，並且官方建議配置的數量最好與topic\_id的分區數量相等，即 consumer\_threads =&gt; 28，但是配置完了以後監控kafka發現，消費速度還是趕不上生產速度，這個時候就不得不考慮是logstash自身的一個瓶頸了
+
+通過查詢logstash性能優化發現，還有一個參數也是至關重要的，就是每個logstash進程佔用的最大內存，於是修改了一下logstash安裝目錄下的bin目錄下的 logstash.lib.sh 文件，
+
+![](https://pic1.xuehuaimg.com/proxy/csdn/https://img-blog.csdnimg.cn/20190414092535846.png)
+
+這時候發現Lag慢慢在下降了，但是過一段時間又升起來了，通過觀察Last seen發現有的分區一小時前就沒消費了，但是延遲很大，雖然一個線程對應一個分區，但是如果資源不足，可能線程就要等待了，所以一直不消費，這時候慢慢調整consumer\_threads 的數量到最優，最後調到了  consumer\_threads =&gt; 7，發現再也不存在延遲消費的情況了
+
+![](https://pic1.xuehuaimg.com/proxy/csdn/https://img-blog.csdnimg.cn/20190414093718906.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3p1b2NoYW5nX2xpdQ==,size_16,color_FFFFFF,t_70)
 
 
 

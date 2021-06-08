@@ -107,7 +107,7 @@ consistency参数的值可以设为 ：
 
 几个概念：
 
-* 内存buffer 
+* 内存buffer
 * translog
 * 文件系统缓冲区
 * refresh
