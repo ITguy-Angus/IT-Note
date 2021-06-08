@@ -1459,7 +1459,28 @@ output.kafka:
 
 ###  Logstash
 
+```text
+input {
+  kafka {
+    bootstrap_servers => "10.146.0.3:9092,10.146.0.5:9092,10.140.0.6:9092"
+    topics => ["nginx-logs"]
+    consumer_threads => 9
+    group_id => "logstash"
+    codec => "json"
+    decorate_events => true
+  }
+}
 
+output {
+  elasticsearch {
+    hosts => ["http://10.140.0.6:9200"]
+    index => "nginx-logs" 
+#   index => "%{[@metadata][beat]}-%{[@metadata][version]}"
+    user => "elastic" 
+    password => "P@ssw0rd@Data!"  
+  }  
+}
+```
 
 ```text
 input{
