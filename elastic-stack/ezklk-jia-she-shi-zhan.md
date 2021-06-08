@@ -1179,6 +1179,16 @@ curl -XPUT "http://localhost:9200/nginx-logs" -H 'Content-Type: application/json
 
 ## logstash
 
+### logstash Yml 檔
+
+
+
+
+
+### logstash  conf 檔
+
+
+
 
 
 
@@ -1475,6 +1485,8 @@ output.kafka:
 
 
 ###  Logstash
+
+
 
 ```text
 input {
