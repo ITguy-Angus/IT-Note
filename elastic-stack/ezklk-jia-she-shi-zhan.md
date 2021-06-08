@@ -1109,13 +1109,15 @@ bin/kafka-consumer-groups.sh --zookeeper 127.0.0.1:2181 --group console-consumer
 curl -XGET 'http://localhost:9200/_cluster/health?pretty'
 ```
 
-### Elasticsearch index 設定
-
 ### 創建Index
 
 ```text
 curl -XPUT "http://localhost:9200/nginx-logs" -H 'Content-Type: application/json' -d'{  "settings": {    "number_of_shards": 3,    "number_of_replicas": 2  },  "mappings": {    "properties": {      "field1": { "type": "text" }    }  }}'
 ```
+
+## logstash
+
+
 
 ## 啟動命令
 
@@ -1140,17 +1142,21 @@ nohup ./kibana &
 
 ```text
 #Zookeeper
-# 启动节点1
+启动节点
 /usr/local/zookeeper/bin/zkServer.sh start
-# 启动节点2
-/usr/local/zookeeper/bin/zkServer.sh start
-# 启动节点3
-/usr/local/zookeeper/bin/zkServer.sh start
+
 #查詢啟動是否成功
 /usr/local/zookeeper/bin/zkServer.sh status
 
 #kafka
 nohup bin/kafka-server-start.sh config/server-3.properties &
+```
+
+### Seige
+
+```text
+siege  http://10.170.0.11/ -c500 -t600s -b
+siege  http://10.170.0.2/ -c500 -t600s -b
 ```
 
 ## 設定檔備份
