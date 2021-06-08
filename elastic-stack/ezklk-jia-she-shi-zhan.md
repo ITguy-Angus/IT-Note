@@ -1099,7 +1099,25 @@ lx_test                        lx_test_topic             0          465         
 bin/kafka-consumer-groups.sh --zookeeper 127.0.0.1:2181 --group console-consumer-11967 --
 ```
 
-   
+### Kafka 坑!!
+
+1. filebeat Topic進入kafka 後只有 1個partition 1ReplicationFactor
+
+kafka自动创建主题时指定分区数
+
+可以通过修改kafka broker的server.properties配置文件的auto.create.topics.enable来开启主题自动创建功能，如果相关闭主题自动创建功能，设置auto.create.topics.enable=false即可，自动创建主题默认创建一个分区，为了提高kafka吞吐量，我们可以根据实际需要通过修改num.partitions这个配置来调整默认创建主题的分区数
+
+num.partitions=50 就意味着默认为每个自动创建主题创建50个分区 
+
+```text
+############################ Topic setting ###########################################
+
+auto.create.topics.enable = true
+num.partitions=3
+default.replication.factor=3
+```
+
+[https://blog.csdn.net/john1337/article/details/106914959](https://blog.csdn.net/john1337/article/details/106914959)
 
 ## Elasticsearch
 
@@ -1109,6 +1127,8 @@ bin/kafka-consumer-groups.sh --zookeeper 127.0.0.1:2181 --group console-consumer
 curl -XGET 'http://localhost:9200/_cluster/health?pretty'
 ```
 
+### Elasticsearch Index
+
 ### 創建Index
 
 ```text
@@ -1116,6 +1136,10 @@ curl -XPUT "http://localhost:9200/nginx-logs" -H 'Content-Type: application/json
 ```
 
 ## logstash
+
+
+
+
 
 
 
@@ -1917,53 +1941,5 @@ kibana.index: ".kibana"
 
 
 
-## 坑!!!!
 
-### Q.filebeat Topic進入kafka 後只有 1個partition 1ReplicationFactor
-
-#### kafka自动创建主题时指定分区数
-
-可以通过修改kafka broker的server.properties配置文件的auto.create.topics.enable来开启主题自动创建功能，如果相关闭主题自动创建功能，设置auto.create.topics.enable=false即可，自动创建主题默认创建一个分区，为了提高kafka吞吐量，我们可以根据实际需要通过修改num.partitions这个配置来调整默认创建主题的分区数
-
-num.partitions=50 就意味着默认为每个自动创建主题创建50个分区 
-
-```text
-############################ Topic setting ###########################################
-
-auto.create.topics.enable = true
-num.partitions=3
-default.replication.factor=3
-```
-
-{% embed url="https://blog.csdn.net/john1337/article/details/106914959" %}
-
-#### 手動建立分區
-
-cd /usr/local/kafka/bin
-
-touch topic-reassign.json
-
-vim touch topic-reassign.json
-
-```text
-{"version":1,"topics":[{"topic":"topic_replica_test"}]}
-```
-
-`./kafka-reassign-partitions.sh --bootstrap-server 10.140.0.10:2181,10.140.0.11:2181,10.140.0.11:2181 --generate --topics-to-move-json-file topic-reassign.json --broker-list 1,2,3`
-
-kafka-reassign-partitions --zookeeper 10.140.0.12:2181 --generate --topics-to-move-json-file topic-reassign.json --broker-list 1,2,3
-
-[https://blog.csdn.net/lzufeng/article/details/81743521](https://blog.csdn.net/lzufeng/article/details/81743521)
-
-分區重新分配 [https://blog.csdn.net/data2tech/article/details/108719342](https://blog.csdn.net/data2tech/article/details/108719342)
-
-增加\(或减少\)Kafka topic的副本数   [https://blog.csdn.net/data2tech/article/details/108730452](https://blog.csdn.net/data2tech/article/details/108730452)
-
-
-
-
-
-### F&gt;K&gt;L&gt;E&gt;K 無法看到index 在kibana上面
-
-這個問題跟上面的問題有關西 如果Topic 只設定一個 1個partition 、1ReplicationFactor 則logstash 必須設定接受那一Broker 的topic 才行
 
