@@ -257,3 +257,51 @@ bin/kafka-console-producer.sh --broker-list localhost:9092 --topic nyc-test --pr
 
 当然，还有很多其它配置项，但大多不需要我们更改。有兴趣的可以查看文末链接。
 
+
+
+## Logstash  Kafka 消費者線程
+
+某一个下午,接口组的小伙伴突然说再kibana上看到的消息是7天前的,吓得我赶紧放下了手中的代码,直接看生产kafka的消费情况,,一看,果然~~~![](//upload-images.jianshu.io/upload_images/5362478-d46f27f16bac33bc.jpg?imageMogr2/auto-orient/strip|imageView2/2/w/770)1.jpg
+
+图中可以看到 Lag\(差值\) 每个partition滞后240w+的消息数据,这个topic一共有100个partition,也就是说滞后了2亿4千条的消息...顿时感觉一股寒流冲上脑袋瓜...
+
+检查了一下logstash的配置文件  
+![](//upload-images.jianshu.io/upload_images/5362478-dbfb26759781d97a.jpg?imageMogr2/auto-orient/strip|imageView2/2/w/835)2.jpg
+
+3个topic,然后线程300个,看上去没毛病啊,,\(因为这3个topic每个有100个partition\)...然后就纳闷了..  
+ 之前压测过logstash,基本上kafka多少的数据进入,就能多少数据输出,曾今最高压测高达80~100M/s,,所以也没怀疑到logstash的能力,es就更不可能了,写入当时也就几万条,根本远远达不到es 的瓶颈
+
+突然想起之前也发生类似的情况,被我组长调整了一下,原先线程数是3,现在是300,topic也增加了,,然后又想是不是线程太多的原因导致的,因为logstash本身是docker部署的,cpu分配了8个,300个线程会不会吃不消,因为存在cpu线程切换啊.
+
+于是将线程调到100个,发现还是消费很慢,,,
+
+破天荒的,点开了第二个节点,docker ps 看到了logstash进程,因为以前都是一个logstash进程去消费的,在第二个节点上看到了logstash进程让我感到非常意外,,因为印象中只有一个logstash节点,,然后看了一下配置文件,,,就知道了...
+
+原来3个节点都是同一套logstash配置,这样就会导致有600个线程的logstash没有利用起来,,,抱着侥幸的心里调整了一下,每个节点都是100个线程,,竟然有效果,es的吞吐量达到了10w+,,,\(没截图\)
+
+继续调优,因为在dtc的消息量少,dac的消息量偏中等\(但是也滞后了600w消息\),dic的消息量是最大的,于是在其中一个节点上  
+![](//upload-images.jianshu.io/upload_images/5362478-d7816cd712a1782b.jpg?imageMogr2/auto-orient/strip|imageView2/2/w/371)3.jpg
+
+其他两个节点都消费dic,线程50个  
+![](//upload-images.jianshu.io/upload_images/5362478-5f9be009931ac623.jpg?imageMogr2/auto-orient/strip|imageView2/2/w/248)4.jpg
+
+然后kibana中es的吞吐量![](//upload-images.jianshu.io/upload_images/5362478-0246578c77b7e498.jpg?imageMogr2/auto-orient/strip|imageView2/2/w/1200)5.jpg
+
+基本都在30w+,40w左右~~~,
+
+所以这里也涉及到一个kafka的消费机制,一个topic的partition最多被一个线程消费,logstash配置的线程数也不宜过多,但是所有节点的总线程数必须要比topic下的partition小或者等于才行,这样资源才会合理利用...
+
+over!
+
+附上查消息偏移量的命令:
+
+0.9版本查看消费进度  
+ kafka-consumer-offset-checker --zookeeper localhost:2181/kafka --group dac-logstash --topic dtc  
+ 1.1.0版本查看消费进度  
+ ./kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group dpc\_group\_01  
+  
+作者：CTO\_zej  
+链接：https://www.jianshu.com/p/b80b3e4f3758  
+来源：简书  
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+
