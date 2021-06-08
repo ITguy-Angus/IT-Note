@@ -1199,6 +1199,12 @@ curl -XPUT "http://localhost:9200/nginx-logs" -H 'Content-Type: application/json
 
 這時候發現Lag慢慢在下降了，但是過一段時間又升起來了，通過觀察Last seen發現有的分區一小時前就沒消費了，但是延遲很大，雖然一個線程對應一個分區，但是如果資源不足，可能線程就要等待了，所以一直不消費，這時候慢慢調整consumer\_threads 的數量到最優，最後調到了  consumer\_threads =&gt; 7，發現再也不存在延遲消費的情況了
 
+所以这里也涉及到一个kafka的消费机制,一个topic的partition最多被一个线程消费,logstash配置的线程数也不宜过多,但是所有节点的总线程数必须要比topic下的partition小或者等于才行,这样资源才会合理利用...
+
+配置要領
+
+1.消費者總數/主題分區數&gt;取得值平均分配到logstash
+
 ![](https://pic1.xuehuaimg.com/proxy/csdn/https://img-blog.csdnimg.cn/20190414093718906.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3p1b2NoYW5nX2xpdQ==,size_16,color_FFFFFF,t_70)
 
 #### consumer\_threads  設定方式
