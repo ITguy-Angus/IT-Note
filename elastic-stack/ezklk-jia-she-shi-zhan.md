@@ -1490,11 +1490,11 @@ input {
 
 output {
   elasticsearch {
-    hosts => ["http://10.140.0.6:9200"]
+    hosts => ["10.140.0.6:9200", "10.140.0.14:9200","10.140.0.16:9200"]
     index => "nginx-logs" 
-#   index => "%{[@metadata][beat]}-%{[@metadata][version]}"
-    user => "elastic" 
-    password => "P@ssw0rd@Data!"  
+#    index => "%{[@metadata][beat]}-%{[@metadata][version]}"
+#    user => "elastic" 
+#    password => "P@ssw0rd@Data!"  
   }  
 }
 ```
