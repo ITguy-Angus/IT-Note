@@ -312,7 +312,7 @@ nohup grunt server &
 #CMAK
 nohup bin/cmak -Dconfig.file=conf/application.conf -Dhttp.port=9001 &
 #Elasticsearch 
-./elasticsearch -d
+./bin/elasticsearch -d
 #kibana
 nohup ./bin/kibana &
 ```
