@@ -141,3 +141,45 @@ echo "START elasticsearch-head "
 nohup grunt server &exit
 ```
 
+ 
+
+### 坑!!
+
+啟動了es之後可以訪問:node1:9200,也可以訪問node3:9100,但是head的視覺化頁面無法連線到elasticSearch叢集.  
+ 問題解決:  
+ 方案一:  
+ 在elasticsearch.yml里加這麼一行  
+ xpack.security.enabled: false  
+ 方案二:  
+ 在elasticsearch.yml里加這麼兩行  
+ http.cors.enabled: true  
+ http.cors.allow-origin: “\*”  
+ http.cors.allow-headers: Authorization,Content-Type  
+ 然後在每次使用head外掛的時候，按照如下的格式輸入：  
+ [http://node1:9100/?auth\_user=elastic&auth\_password=changeme”](http://node1:9100/?auth_user=elastic&auth_password=changeme%E2%80%9D)
+
+
+
+
+
+ [精选文章](https://www.huaweicloud.com/articles/articles-A-1.html) Elasticsearch-head安装后无法连接ES
+
+## Elasticsearch-head安装后无法连接ES
+
+ [作者：weixin\_34366546](https://www.huaweicloud.com/articles/17f61a57f1c33ac1afb3d36c7d5de67e.html#) 时间: 2021-02-07 01:38:23 [标签：](https://www.huaweicloud.com/articles/topic-A-1.html) [java与设计模式](https://www.huaweicloud.com/articles/topic_bbd1579933584ba33a9ebe2dcba93357.html) [设计模式](https://www.huaweicloud.com/articles/topic_301a19970448f8e4f27ddae7a7d415fe.html) [设计原则](https://www.huaweicloud.com/articles/topic_7cc9f6e98f5077948872172b9deb5b11.html)
+
+```text
+【摘要】ES版本为Version:
+ 5.5.1, Build: 19c13d0/2017-07-18T20:44:24.823Z, JVM: 
+1.8.0_131    确认访问ES没有问题，但是安装es-head后，死活无法连接到ES集群，显示集群状态：集群健康值: 
+未连接    最后分析出原因为：我是从集测环境copy过来的配置文件，因为集测环境开启了x-pack的security，而生产环境没有...
+```
+
+ ES版本为Version: 5.5.1, Build: 19c13d0/2017-07-18T20:44:24.823Z, JVM: 1.8.0\_131
+
+ 确认访问ES没有问题，但是安装es-head后，死活无法连接到ES集群，显示集群状态：集群健康值: 未连接
+
+ 最后分析出原因为：我是从集测环境copy过来的配置文件，因为集测环境开启了x-pack的security，而生产环境没有，但是配置文件里面配置了：http.cors.allow-headers: "Authorization"  导致ES-head无法连接到ES集群，发现问题后，在配置文件里面对http.cors.allow-headers进行了注释，重启ES后，就可以连接了。
+
+转载于:https://blog.51cto.com/kexiaoke/1961880
+
