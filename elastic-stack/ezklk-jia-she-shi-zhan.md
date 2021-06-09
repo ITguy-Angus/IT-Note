@@ -314,7 +314,7 @@ nohup bin/cmak -Dconfig.file=conf/application.conf -Dhttp.port=9001 &
 #Elasticsearch 
 ./elasticsearch -d
 #kibana
-nohup ./kibana &
+nohup ./bin/kibana &
 ```
 
 ### Zookeeper&Kafka
