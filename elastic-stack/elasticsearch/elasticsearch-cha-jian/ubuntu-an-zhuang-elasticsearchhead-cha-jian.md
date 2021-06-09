@@ -104,6 +104,8 @@ $ vim /usr/local/elasticsearch/config/elasticsearch.yml
 ```text
 http.cors.enabled: true
 http.cors.allow-origin: "*"
+#諾有啟用security 請加上下面這行
+http.cors.allow-headers: "Authorization"
 ```
 
 保存后重启es。
