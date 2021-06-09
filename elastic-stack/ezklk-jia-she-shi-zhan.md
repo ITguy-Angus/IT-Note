@@ -317,6 +317,10 @@ nohup bin/cmak -Dconfig.file=conf/application.conf -Dhttp.port=9001 &
 nohup ./bin/kibana &
 ```
 
+```text
+kill -9 $(ps aux | grep elastic | awk '{print $2}')
+```
+
 ### Zookeeper&Kafka
 
 ```text
