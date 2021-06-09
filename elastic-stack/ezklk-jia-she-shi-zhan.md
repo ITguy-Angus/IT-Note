@@ -2008,7 +2008,9 @@ kibana.index: ".kibana"
 # Specifies locale to be used for all localizable strings, dates and number formats.
 # Supported languages are the following: English - en , by default , Chinese - zh-CN .
 #i18n.locale: "en"
-
+xpack.security.enabled: true
+elasticsearch.username: "kibana" # 7.9.2版:"kibana_system"
+elasticsearch.password: "adminn"
 ```
 
 
