@@ -328,14 +328,14 @@ nohup ./kibana &
 /usr/local/zookeeper/bin/zkServer.sh status
 
 #kafka
-nohup bin/kafka-server-start.sh config/server-3.properties &
+nohup bin/kafka-server-start.sh config/server-1.properties &
 ```
 
 ### Seige
 
 ```text
-siege  http://10.170.0.11/ -c500 -t600s -b
-siege  http://10.170.0.2/ -c500 -t600s -b
+siege  http://10.170.0.11/ -c600 -t600s -b
+siege  http://10.170.0.2/ -c600 -t600s -b
 ```
 
 ## Kafka — 基于 ZooKeeper 搭建 Kafka 
@@ -950,7 +950,7 @@ Topic:lx_test_topic     PartitionCount:1        ReplicationFactor:1     Configs:
 創建Topic
 
 ```text
-[root@shtest01 ~]# bin/kafka-topics.sh --create --bootstrap-server 10.140.0.10:9092 --replication-factor 3 --partitions 3 --topic angus
+[root@shtest01 ~]# bin/kafka-topics.sh --create --bootstrap-server 10.140.0.10:9092 --replication-factor 30 --partitions 3 --topic nginx-logs
 
 ```
 
@@ -1174,7 +1174,7 @@ Elasticsearch Index
 ### 創建Index
 
 ```text
-curl -XPUT "http://localhost:9200/nginx-logs" -H 'Content-Type: application/json' -d'{  "settings": {    "number_of_shards": 3,    "number_of_replicas": 2  },  "mappings": {    "properties": {      "field1": { "type": "text" }    }  }}'
+curl -XPUT "http://localhost:9200/nginx-logs" -H 'Content-Type: application/json' -d'{  "settings": {    "number_of_shards": 30,    "number_of_replicas": 1  },  "mappings": {    "properties": {      "field1": { "type": "text" }    }  }}'
 ```
 
 ## logstash
@@ -1211,9 +1211,9 @@ curl -XPUT "http://localhost:9200/nginx-logs" -H 'Content-Type: application/json
 
 所以这里也涉及到一个kafka的消费机制,一个topic的partition最多被一个线程消费,logstash配置的线程数也不宜过多,但是所有节点的总线程数必须要比topic下的partition小或者等于才行,这样资源才会合理利用...
 
-配置要領
+#### consumer\_threads 配置要領
 
-1.消費者總數/主題分區數&gt;取得值平均分配到logstash
+####  1.消費者CPU線程總數/主題分區數&gt;取得值平均分配到logstash
 
 ![](https://pic1.xuehuaimg.com/proxy/csdn/https://img-blog.csdnimg.cn/20190414093718906.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3p1b2NoYW5nX2xpdQ==,size_16,color_FFFFFF,t_70)
 
@@ -1224,7 +1224,7 @@ input {
   kafka {
     bootstrap_servers => "10.146.0.3:9092,10.146.0.5:9092,10.140.0.6:9092"
     topics => ["nginx-logs"]
-    consumer_threads => 9
+    consumer_threads => 2
     group_id => "logstash"
     codec => "json"
     decorate_events => true
