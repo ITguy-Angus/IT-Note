@@ -317,6 +317,8 @@ nohup bin/cmak -Dconfig.file=conf/application.conf -Dhttp.port=9001 &
 nohup ./bin/kibana &
 ```
 
+#### 重啟程序
+
 ```text
 kill -9 $(ps aux | grep elastic | awk '{print $2}')
 ```
