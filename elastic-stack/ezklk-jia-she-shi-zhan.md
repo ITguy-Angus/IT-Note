@@ -320,7 +320,7 @@ nohup ./bin/kibana &
 #### 重啟程序
 
 ```text
-kill -9 $(ps aux | grep elastic | awk '{print $2}')
+kill -9 $(ps aux | grep elasticsearch | awk '{print $2}')
 ```
 
 ### Zookeeper&Kafka

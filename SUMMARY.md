@@ -11,6 +11,8 @@
   * [ELK Stack apt 安裝方式](elastic-stack/1.elasticstack-install/apt-install.md)
   * [應用連結](elastic-stack/1.elasticstack-install/ying-yong-lian-jie.md)
 * [Kibana](elastic-stack/kibana/README.md)
+  * [X-Pack 套件](elastic-stack/kibana/xpack-tao-jian/README.md)
+    * [X-Pack security](elastic-stack/kibana/xpack-tao-jian/x-pack-security.md)
   * [Kibana 使用者登入套件設定](elastic-stack/kibana/elk-deng-ru-she-ding.md)
 * [Elasticsearch](elastic-stack/elasticsearch/README.md)
   * [Angus 實戰筆記](elastic-stack/elasticsearch/angus-shi-zhan-bi-ji.md)
