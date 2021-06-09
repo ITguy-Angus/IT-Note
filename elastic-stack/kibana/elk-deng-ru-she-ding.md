@@ -39,7 +39,7 @@ xpack.security.transport.ssl.truststore.path: elastic-certificates.p12
 
 ```text
 # kill -9 $(ps aux | grep elastic | awk '{print $2}')
-# ./usr/local/elasticsearch/bin/elasticsearch -d
+# usr/local/elasticsearch/bin/elasticsearch -d
 ```
 
 ### **3.設定預設密碼**
