@@ -1663,7 +1663,6 @@ cluster.initial_master_nodes: ["node1"]
 
 #xpack.security.enabled: true
 #xpack.security.transport.ssl.enabled: true
-xpack.security.audit.enabled: true
 #xpack.security.transport.ssl.verification_mode: certificate
 #xpack.security.transport.ssl.keystore.path: elastic-certificates.p12
 #xpack.security.transport.ssl.truststore.path: elastic-certificates.p12
@@ -1781,7 +1780,6 @@ cluster.initial_master_nodes: ["node1"]
 
 #xpack.security.enabled: true
 #xpack.security.transport.ssl.enabled: true
-xpack.security.audit.enabled: true
 #xpack.security.transport.ssl.verification_mode: certificate
 #xpack.security.transport.ssl.keystore.path: elastic-certificates.p12
 #xpack.security.transport.ssl.truststore.path: elastic-certificates.p12
@@ -1892,10 +1890,8 @@ cluster.initial_master_nodes: ["node1"]
 #action.destructive_requires_name: true
 
 #xpack.security.enabled: true
-xpack.security.audit.enabled: true
 #xpack.security.transport.ssl.enabled: true
 #xpack.security.transport.ssl.verification_mode: certificate
-
 #xpack.security.transport.ssl.keystore.path: elastic-certificates.p12
 #xpack.security.transport.ssl.truststore.path: elastic-certificates.p12
 http.cors.enabled: true
@@ -2024,6 +2020,8 @@ elasticsearch.password: "adminn"
 ```
 
 
+
+## Temp
 
 
 
