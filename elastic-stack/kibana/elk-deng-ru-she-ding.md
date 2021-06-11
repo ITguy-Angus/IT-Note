@@ -9,6 +9,8 @@ description: ELK 登入設定
 ELK版本 7.1以上
 
 > 前情提要:這篇是延續[教學文章](https://medium.com/@d101201007/centos7-elk-filebeat-%E6%8C%87%E4%BB%A4%E5%AE%89%E8%A3%9D-%E7%85%A7%E8%91%97%E8%B2%BC%E4%B8%8A%E5%B0%B1%E5%B0%8D%E4%BA%86-73f456381491)的設置，elasticsearch 用了身分elastic，安裝路徑在/usr/local/下面為範例，如果不能執行確認一下路徑是否正確，或可以留言給我。
+>
+> #### 諾是叢集架構需要修改所有Elasticsearch 節點設定檔再一一啟動。
 
 ### **1.產生憑證 elastict**
 
