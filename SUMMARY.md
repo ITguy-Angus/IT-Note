@@ -66,3 +66,8 @@
 * [ELK 學習筆記](elastic-stack/elk-xue-xi-bi-ji/README.md)
   * [EBLK之2---EBLK](elastic-stack/elk-xue-xi-bi-ji/eblk-zhi-2eblk.md)
 
+## Linux
+
+* [資料同步](linux/zi-liao-tong-bu/README.md)
+  * [Rsync](linux/zi-liao-tong-bu/rsync.md)
+
