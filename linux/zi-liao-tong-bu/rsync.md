@@ -1,5 +1,65 @@
 # Rsync
 
+## 
+
+## 
+
+## Ubuntu
+
+```text
+rsync是最常用來做同步備份的
+
+使用rsync演算法，快速的將資料將本地(locale)和遠端(remote)兩端資料同步
+1
+	apt-get install rsync
+
+/etc/init.d/rsync
+1
+	RSYNC_ENABLE= true #改成 true
+
+接著是設定rsyncd.conf以及rsyncd.secrets
+
+這兩個檔案本身是不存在的，需另外編輯
+
+/etc/rsyncd.conf
+1
+	[backup1]      #module name
+2
+	    comment = backup dmz web #說明
+3
+	    path = /home/rsync/backup1 #存放備份資料的路徑
+4
+	    auth users = backup1 #認證帳號(設定在rsyncd.secrets的帳號)
+5
+	    uid = backup1 #以uid backup1來啟動rsync server     
+6
+	    gid = backup1 #以gid backup1來啟動rsync server     
+7
+	    secrets file = /etc/rsyncd.secrets #密碼檔存放路徑
+8
+	    read only = no
+
+若不想輸入密碼，可以把設定檔中auth users、uid、gid、secrets file都註解掉
+
+/etc/rsyncd.secrets
+1
+	backup1:backup1 #帳號:密碼
+
+重新啟動
+1
+	/etc/init.d/rsync restart
+2
+	rsync --daemon  #啟動
+3
+	rsync 210.71.4.88::  //確認是否成功啟動
+4
+	rsync -av /home/ecc_dfs/ 帳號@IP:/home/ecc_dfs/
+1
+	-a：archive mode 權限保存模式.很快速的保存幾乎所有的權限設定,除了透過-H(hard-link)設定的之外.
+2
+	-v：詳細的輸出訊息.
+```
+
 ## CentOS安裝
 
 一、 Rsync介紹  
