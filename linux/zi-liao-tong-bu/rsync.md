@@ -1,6 +1,6 @@
 # Rsync
 
-## Ubuntu
+## Ubuntu 安裝
 
 ```text
 rsync是最常用來做同步備份的
