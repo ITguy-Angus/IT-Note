@@ -77,7 +77,7 @@ $ vim Gruntfile.js
 
 在port: 9100上面加一行hostname: '0.0.0.0',这样其他机器就可以访问了。如果有开防火墙，记得开放9100端口。
 
-![](../../../.gitbook/assets/tu-pian-%20%2816%29.png)
+![](../../../../.gitbook/assets/tu-pian-%20%2816%29.png)
 
 （2）设置连接elasticsearch的地址：插件默认是连接本机es的，即127.0.0.1:9200,如果ES不在本机上或者端口不是默认端口，需要在app.js进行配置，配置文件在head插件安装目录的\_site目录下。把this.base\_uri = this.config.base\_uri \|\| this.prefs.get\(“app-base\_uri”\) \|\| “http://localhost:9200”;这行配置中的http://localhost:9200改成你elasticsearch服务所在IP地址。
 
@@ -85,7 +85,7 @@ $ vim Gruntfile.js
 $ vim _site/app.js
 ```
 
-![](../../../.gitbook/assets/tu-pian-%20%2813%29.png)
+![](../../../../.gitbook/assets/tu-pian-%20%2813%29.png)
 
 （3）elasticsearch配置允许跨域访问：修改elasticsearch配置文件，
 
@@ -93,7 +93,7 @@ $ vim _site/app.js
 $ locate elasticsearch.yml #查看配置文件所在位置
 ```
 
-![](../../../.gitbook/assets/tu-pian-%20%2818%29.png)
+![](../../../../.gitbook/assets/tu-pian-%20%2818%29.png)
 
 ```text
 $ vim /usr/local/elasticsearch/config/elasticsearch.yml
@@ -125,9 +125,9 @@ $ nohup grunt server &
 
 如果能打印以下的信息，那就说明head插件安装并运行成功，我们可以通过http://ip:9100访问管理页面。
 
-![](../../../.gitbook/assets/tu-pian-%20%2814%29.png)
+![](../../../../.gitbook/assets/tu-pian-%20%2814%29.png)
 
-![](../../../.gitbook/assets/tu-pian-%20%2815%29.png)
+![](../../../../.gitbook/assets/tu-pian-%20%2815%29.png)
 
 这里并不是后台启动，我们可以创建一个后台启动文件，使其能够后台启动。
 

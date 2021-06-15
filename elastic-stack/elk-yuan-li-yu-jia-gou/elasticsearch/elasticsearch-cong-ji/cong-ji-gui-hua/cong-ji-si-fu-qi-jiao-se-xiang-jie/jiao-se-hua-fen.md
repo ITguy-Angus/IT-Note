@@ -12,9 +12,9 @@ Coordinating Node：协调节点
 Ingest Node：ingest节点  
 machine learning：机器学习节点
 
-![](../../../../../.gitbook/assets/tu-pian-%20%2817%29.png)
+![](../../../../../../.gitbook/assets/tu-pian-%20%2817%29.png)
 
-![](../../../../../.gitbook/assets/tu-pian-%20%2812%29.png)
+![](../../../../../../.gitbook/assets/tu-pian-%20%2812%29.png)
 
 * Master Node：主节点，该节点不和应用创建连接，每个节点都保存了集群状态，master节点不占用磁盘IO和CPU，内存使用量一般。
 * Master eligible nodes：合格节点，每个节点部署后不修改配置信息，默认就是一个 eligible 节点，该节点可以参加选主流程，成为Mastere节点。该节点也保存了集群节点的状态。eligible节点比Master节点更节省资源，因为它还未成为 Master 节点，只是有资格成功Master节点。

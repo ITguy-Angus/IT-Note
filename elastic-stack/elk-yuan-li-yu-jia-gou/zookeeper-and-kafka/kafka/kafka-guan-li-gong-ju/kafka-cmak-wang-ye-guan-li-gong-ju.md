@@ -61,7 +61,7 @@ web首页
 
 注意：如果需要管理监控的Kafka集群已经开启JMX\_PORT，那么就可以勾选额外蓝色的选项，否则不要勾选，按照默认的不勾选即可。
 
-![](../../../../.gitbook/assets/tu-pian-%20%2819%29.png)
+![](../../../../../.gitbook/assets/tu-pian-%20%2819%29.png)
 
 [![](https://s4.51cto.com/oss/202007/27/41e0dc5f12c24dd0b53b35e9c5ffd67d.jpg)](https://s4.51cto.com/oss/202007/27/41e0dc5f12c24dd0b53b35e9c5ffd67d.jpg)添加集群管理
 
@@ -73,15 +73,15 @@ Yikes! KeeperErrorCode = Unimplemented for /kafka-manager/mutex Try again.
 
 那么你需要升级zookeeper到3.5+版本。
 
-![](../../../../.gitbook/assets/tu-pian-%20%2821%29.png)
+![](../../../../../.gitbook/assets/tu-pian-%20%2821%29.png)
 
 [![](https://s2.51cto.com/oss/202007/27/30065c1e13dd86a5d7dba341e9eabc23.jpg)](https://s2.51cto.com/oss/202007/27/30065c1e13dd86a5d7dba341e9eabc23.jpg)创建集群管理成功
 
 **3.创建成功后，你就可以看到你的Kafka信息。**
 
-![&#x96C6;&#x7FA4;&#x4FE1;&#x606F;](../../../../.gitbook/assets/tu-pian-%20%2822%29.png)
+![&#x96C6;&#x7FA4;&#x4FE1;&#x606F;](../../../../../.gitbook/assets/tu-pian-%20%2822%29.png)
 
-![&#x5177;&#x4F53;Topic&#x5217;&#x8868;](../../../../.gitbook/assets/tu-pian-%20%2820%29.png)
+![&#x5177;&#x4F53;Topic&#x5217;&#x8868;](../../../../../.gitbook/assets/tu-pian-%20%2820%29.png)
 
 **结束语**
 

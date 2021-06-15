@@ -129,7 +129,7 @@ echo "3" > /usr/local/zookeeper/data/03/myid
 
 使用 jps 查看进程，并且使用 `zkServer.sh status` 查看集群各个节点状态。如图三个节点进程均启动成功，并且两个节点为 follower 节点，一个节点为 leader 节点。
 
-![](../../../.gitbook/assets/tu-pian-.png)
+![](../../../../.gitbook/assets/tu-pian-.png)
 
 
 
@@ -253,7 +253,7 @@ bin/kafka-topics.sh --describe --bootstrap-server 10.140.0.10:9092 --topic my-re
 复制代码
 ```
 
-![](../../../.gitbook/assets/tu-pian-%20%2827%29.png)
+![](../../../../.gitbook/assets/tu-pian-%20%2827%29.png)
 
 可以看到分区 0 的有 0,1,2 三个副本，且三个副本都是可用副本，都在 ISR\(in-sync Replica 同步副本\) 列表中，其中 1 为首领副本，此时代表集群已经搭建成功。
 
