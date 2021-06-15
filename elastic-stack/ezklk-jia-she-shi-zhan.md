@@ -74,7 +74,7 @@ sudo ufw status numbered #以數字排列目前防火牆規則
 
  `curl -X GET "localhost:9200"`
 
-創建服務
+創建 systemctl 服務
 
 ```text
 #使用systemd管理es
@@ -226,6 +226,24 @@ output {
 ```text
 [2021-04-19T01:17:55,954][INFO ][org.logstash.beats.Server][main][d30cec8718b4eec2fe086d75154440802a7f35a6572519d10
 06ee383031ddb4c] Starting server on port: 5044
+```
+
+創建systemctl 服務
+
+```text
+#systemd管理kibana
+/usr/lib/systemd/system/kibana.service
+[Unit]
+Description=Kinaba
+Documentation=http://www.elastic.co
+Wants=network-online.target
+After=network-online.target
+[Service]
+User=kibana
+Group=kibana
+ExecStart=/usr/local/kibana/bin/kibana
+[Install]
+WantedBy=multi-user.target
 ```
 
 ### Filebeat 安裝
