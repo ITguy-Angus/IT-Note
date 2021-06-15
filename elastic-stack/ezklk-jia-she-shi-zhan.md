@@ -74,7 +74,25 @@ sudo ufw status numbered #以數字排列目前防火牆規則
 
  `curl -X GET "localhost:9200"`
 
+創建服務
 
+```text
+#使用systemd管理es
+/usr/lib/systemd/system/elasticsearch.service
+[Unit]
+Description=Elasticsearch
+Documentation=http://www.elastic.co
+Wants=network-online.target
+After=network-online.target
+[Service]
+User=es
+Group=es
+LimitNOFILE=100000
+LimitNPROC=100000
+ExecStart=/usr/local/elasticsearch-7.3.2/bin/elasticsearch
+[Install]
+WantedBy=multi-user.target
+```
 
 ### Kibana 安裝
 
