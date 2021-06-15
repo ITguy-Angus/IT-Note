@@ -1,9 +1,5 @@
 # Rsync
 
-## 
-
-## 
-
 ## Ubuntu
 
 ```text
