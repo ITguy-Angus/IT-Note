@@ -69,6 +69,7 @@
 
 ## Linux
 
-* [資料同步](linux/zi-liao-tong-bu/README.md)
+* [資料處裡](linux/zi-liao-tong-bu/README.md)
+  * [Find](linux/zi-liao-tong-bu/find.md)
   * [Rsync](linux/zi-liao-tong-bu/rsync.md)
 
