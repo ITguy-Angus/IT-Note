@@ -1,5 +1,156 @@
 # Rsync
 
+## 安裝
+
+一、 Rsync介紹  
+ rsync是Unix下的一款應用軟體，它能同步更新兩處電腦的檔案與目錄，並適當利用差分編碼以減少資料傳輸。rsync中一項與其他大部份類似程式或協定中所未見的重要特性是映像對每個目標只需要一次傳送。rsync可複製／顯示目錄內容，以及複製檔案，並可選擇性的壓縮以及遞歸複製。  
+ 在常駐模式（daemon mode）下，rsync預設監聽TCP埠873，以原生rsync傳輸協定或者透過遠端shell如RSH或者SSH伺服檔案。SSH情況下，rsync用戶端執行程式必須同時在本機和遠端機器上安裝。  
+ rsync是自由軟體，以GNU通用公共許可證發行。
+
+Rsync在備份的部份  
+ 主要是傳送資料差異的部份，因此大多都被使用在差異備份上。除了資料第一次傳輸是整份檔案外，之後都只會傳送資料間異動的部份。  
+ 備份相關名詞 :  
+ 鏡像備份\(mirror backup\) : 如同鏡子一般，把資料完整的做一份備份。  
+ 增量備份\(incremental backup\) : 只備份從上次備份後，資料有異動的部份。  
+ 二、 Rsync設定  
+ 這次在rsync設定部份，直接使用範例的方式會比較快了解。
+
+範例 :  
+ 把A主機的網頁資料\( /var/www/html \)，定期備份到B主機的\( /home/backup/\)  
+ A主機\( Server端 \) IP :192.168.1.222  
+ B主機\( Clinet端 \) IP :192.168.1.122
+
+在開始設定之前，有兩個檔案要說明一下:  
+ /etc/rsyncd.conf 為rsync設定檔  
+ /etc/rsyncd.secrets 為rsync 密碼檔
+
+1. 先設定B主機  
+    1.1 在B主機上查詢是否有安裝rsync
+
+   \[root@localhost ~\]\# rpm -qa \| grep 'rsync'  
+    rsync-2.6.8-3.1  
+    \#如果沒有安裝的話 請自行補上  
+    \[root@localhost ~\]\# yum -y install rsync
+
+1.1 修改 /etc/xinetd.d/rsync 設定  
+ 在這邊所設定的rsync是用xinetd來做啟動的。所以如果在rsync並無特別設定的話，  
+ 則會依照xinetd.conf所設定的執行。
+
+```text
+[root@localhost ~]# vim /etc/xinetd.d/rsync 
+service rsync
+{
+        disable = yes  改為 no 
+        socket_type     = stream
+        wait            = no
+        user            = root
+        server          = /usr/bin/rsync
+        server_args     = --daemon
+        log_on_failure  += USERID
+```
+
+1.2修改rsync.conf 設定檔 \(如果沒有此檔的話請自行建立\)  
+ 以下所使用到的設定參數請依照需求選取設定。
+
+```text
+[root@localhost ~]# vim /etc/rsyncd.conf
+###backup config###                      //註解
+ [web]                                   //module name 
+           comment = backup dmz web      //說明
+           hosts allow = 192.168.1.222   //允許使用rsync連入的ip
+           hosts deny = *                //不允許連入的ip，*表示全檔
+           path = /home/backup/          //存放備份資料的目錄
+           auth users = root    //認證帳號 (要設定於rsyncd.secrets 內的帳號)
+           uid = root                    //用來啟動rsync server 的uid
+           gid = root                    //用來啟動rsync server 的gid 
+           secrets file = /etc/rsyncd.secrets      //密碼檔存放路徑
+           read only = no                          //是否設定為唯讀
+     dont compress = *.gz *.tgz *.zip *.z *.rpm *.deb *.iso *.bz2 *.tbz
+                                          //不要對這些附檔名的檔案做壓縮
+```
+
+1.3設定連線的帳號密碼
+
+```text
+[root@localhost ~]# vim /etc/rsyncd.secrets
+root:12345  (設定格式:  帳號:密碼)
+修改rsyncd.secrets使用權限 (很重要)
+[root@localhost ~]# chmod 600 /etc/rsyncd.secrets
+[root@localhost ~]# chown root.root  /etc/rsyncd.secrets
+```
+
+1.4重新啟動 xinetd，不是啟動 rsync 。  
+ 這邊應該會有人有所疑問，為什麼是重啟xinetd而不是rsync。  
+ 在2.1步驟時，是使用xinetd來啟動rsync。因此在這邊是重啟xinetd而不是rsync。
+
+\[root@localhost ~\]\# /etc/init.d/xinetd restart
+
+1.5 設定開機自動啟動xinetd  
+ 基本上xinetd，已經有預設開機會啟動，如果沒有話請自行手動設定
+
+```text
+[root@localhost ~]# chkconfig xinetd on              #開機自動啟動
+[root@localhost ~]# /etc/init.d/xinetd  restart      #手動啟動
+```
+
+1.6 測試看看是否都正常啟用 \(rsync的port為873\)
+
+```text
+[root@localhost ~]#  netstat -tnlp | grep 873
+tcp    0    0 0.0.0.0:873        0.0.0.0:*         LISTEN      4235/xinetd
+
+[root@localhost ~]# telnet localhost 873  
+#若出現下列訊息表示正常
+Trying 127.0.0.1...
+Connected to localhost.localdomain (127.0.0.1).
+Escape character is '^]'.
+@RSYNCD: 29
+```
+
+1. 設定A主機  
+    2.1 在A主機上查詢是否有安裝rsync
+
+   \[root@localhost ~\]\# rpm -qa \| grep 'rsync'  
+    rsync-2.6.8-3.1  
+    \#如果沒有安裝的話 請自行補上  
+    \[root@localhost ~\]\# yum -y install rsync
+
+2.2 設定登入B主機的密碼  
+ 在A主機上只需要設定密碼就可以。
+
+```text
+[root@localhost ~]# vim /etc/rsyncd.secrets
+12345  (設定格式:  密碼)
+#修改rsyncd.secrets使用權限 (很重要)
+[root@localhost ~]# chmod 600 /etc/rsyncd.secrets
+[root@localhost ~]# chown root.root  /etc/rsyncd.secrets
+```
+
+2.3 測試rsync是否可傳輸資料
+
+```text
+[root@localhost ~]# /usr/bin/rsync -avrHS --delete --password-file=/etc/rsyncd.secrets  /opt root@192.168.1.122::web 
+#或是
+[root@localhost ~]#/usr/bin/rsync -rvlHpogDtS --delete --password-file=/etc/rsyncd.secrets  /opt/ root@192.168.1.122::web
+
+#rsync結束後會看到下列訊息
+sent 19380160 bytes  received 1062 bytes  1685323.65 bytes/sec
+total size is 19374133  speedup is 1.00
+```
+
+3設定排程  
+ 如果剛才的同步指令沒有問題的話。就可以開始設定排程了  
+ 3.1先自行寫一個rsync 的script 用來設定排程
+
+```text
+[root@localhost ~]# vim /root/bin/rsync.sh   #存放在/root/bin/
+#!/bin/sh
+/usr/bin/rsync -avrHS --delete --password-file=/etc/rsyncd.secrets  /opt root@192.168.1.122::web
+```
+
+3.2設定排程  
+
+
 ## 參數
 
 * -v，-verbose增強可讀性
@@ -150,4 +301,56 @@ rsync -avz – -include ‘P\*’ – -exclude ‘\*’ root@192.168.200.10:/var
 14 不要傳輸大文件 使用 – – max-size 參數  
 rsync -avz – -max-size=’100K’ root@192.168.200.10:/var/lib/rpm/ /root/temp/ 15 傳輸所有文件 不管有沒有改變，再次把所有文件都傳輸一遍，用 -W 參數  
 rsync -avzW root@192.168.200.10:/var/lib/rpm/ /root/temp
+
+
+
+## Rsync 複製FTP 檔案
+
+讓我們僅使用FTP `src`呼叫計算機。  
+  
+讓我們使用FTP和SSH `dst`呼叫計算機。  
+
+
+```text
+ssh dst
+cd destination-direction
+wget --mirror --ftp-user=username --ftp-password=password\
+     --no-host-directories ftp://src/pathname/
+```
+
+  
+請注意，在命令列上使用`wget`執行`--ftp-password`會將密碼洩露給系統上的其他任何人。 \(以及通過明線進行傳輸，但是您知道這一點。\)  
+  
+如果您無權訪問`wget`，那麼他們可能已安裝`ncftp`或`lftp`或`ftp`。我只是碰巧知道`wget`最好。 :\)  
+  
+**編輯**要使用`ftp`，您需要做更多的事情:  
+
+
+```text
+ftp src
+user username
+pass password
+bin
+cd /pathname
+ls
+```
+
+  
+此時，請注意遠端系統上的所有目錄。用`!mkdir`建立每個。然後在本地和遠端都轉到目錄:  
+
+
+```text
+lcd <dirname>
+cd <dirname>
+ls
+```
+
+  
+對所有目錄重複此操作。使用`mget *`獲取所有檔案。  
+  
+如果這看起來很糟糕，那是因為。 FTP並非為此目的而設計的，並且如果您的新主機沒有更好的工具\(一定要尋找`ncftp`和`lftp`以及可能類似於`ftpmirror`的東西\)，那麼您可以自己編譯更好的工具，或者擅長於編寫糟糕的指令碼工具。 :\)  
+  
+或者，如果您可以在`src`上獲得 shell ，那也將極大地幫助您。 FTP並非僅用於傳輸數千個檔案。  
+  
+無論如何，這避免了在您的本地系統上反彈，這應該可以顯著提高吞吐量。
 
