@@ -60,7 +60,7 @@ sudo ufw status numbered #以數字排列目前防火牆規則
 
 * 将对应的文件夹权限赋给该用户
 
-`chown -R elasticsearch /usr/local/elasticsearch/elasticsearch-7.12.0`
+`chown -R elasticsearch /usr/local/elasticsearch/`
 
 * 切换至elasticsearch用户 
 
