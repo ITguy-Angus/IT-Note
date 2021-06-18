@@ -77,7 +77,7 @@ sudo ufw status numbered #以數字排列目前防火牆規則
 創建 systemctl 服務
 
 ```text
-#使用systemd管理es
+#使用vim 編輯
 /usr/lib/systemd/system/elasticsearch.service
 #將以下內容貼上文件
 [Unit]
