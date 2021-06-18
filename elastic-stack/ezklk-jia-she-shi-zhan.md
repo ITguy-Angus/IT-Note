@@ -79,13 +79,14 @@ sudo ufw status numbered #以數字排列目前防火牆規則
 ```text
 #使用systemd管理es
 /usr/lib/systemd/system/elasticsearch.service
+#將以下內容貼上文件
 [Unit]
 Description=Elasticsearch
 Documentation=http://www.elastic.co
 Wants=network-online.target
 After=network-online.target
 [Service]
-User=es
+User=elasticsearch
 Group=es
 LimitNOFILE=100000
 LimitNPROC=100000
